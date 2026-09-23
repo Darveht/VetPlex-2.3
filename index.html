@@ -37,6 +37,7 @@
       background: #000;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
+      color-scheme: dark;
     }
     #overlay.vp-hidden { display: none; }
 
@@ -141,8 +142,20 @@
       text-shadow: none;
       box-shadow: none;
     }
-    #overlay .vp-field input::placeholder { color: #8c8c8c; }
+    #overlay .vp-field input::placeholder { color: #8c8c8c; opacity: 1; }
     #overlay .vp-field input:focus { background: #454545; border-bottom-color: #e50914; }
+    /* El gestor de contraseñas del navegador pinta los campos autocompletados
+       con sus propios colores (en modo oscuro, casi negros): forzar el estilo VetPlex */
+    #overlay .vp-field input:-webkit-autofill,
+    #overlay .vp-field input:-webkit-autofill:hover,
+    #overlay .vp-field input:-webkit-autofill:focus,
+    #overlay .vp-field input:-webkit-autofill:active {
+      -webkit-text-fill-color: #fff;
+      -webkit-box-shadow: 0 0 0 80px #333 inset;
+      box-shadow: 0 0 0 80px #333 inset;
+      caret-color: #fff;
+      transition: background-color 9999s ease-in-out 0s;
+    }
 
     #overlay .vp-btn-primary {
       display: block;
