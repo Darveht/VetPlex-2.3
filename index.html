@@ -20,8 +20,10 @@
     body {
       margin: 0;
       font-family: 'Creepster', cursive, sans-serif;
-      background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0') no-repeat center center fixed;
-      background-size: cover;
+      /* FIX: se elimino la foto de Unsplash como fondo del body (era un resto
+         del documento de Halloween concatenado; se veia como "imagen extrana"
+         y franja azulada en iPhone). El fondo oscuro lo define background-color
+         en reglas posteriores (#111). */
       color: #fff;
       overflow: hidden;
     }
@@ -432,10 +434,11 @@
       <div class="vp-auth-shade"></div>
     </div>
     <div class="vp-auth-scroll">
-    <header class="vp-auth-top">
-      <span class="vp-logo">VETPLEX</span>
-    </header>
     <div id="auth-container">
+      <!-- FIX: wordmark dentro de la tarjeta. La barra superior separada
+           (.vp-auth-top) se confundia visualmente con el encabezado del sitio;
+           el overlay ya cubre todo el viewport (fixed, inset:0, z-index:10000). -->
+      <span class="vp-logo">VETPLEX</span>
       <h1 class="vp-auth-title" id="auth-title">Iniciar sesi&oacute;n</h1>
       <p class="vp-auth-sub" id="auth-sub">Tus animes favoritos te esperan.</p>
 
@@ -2438,6 +2441,12 @@
         width: 100%;
         height: auto;
         display: block;
+        box-sizing: border-box;
+        /* FIX: aire interno para que el arte del poster (ej. el titulo
+           "CHAINSAW MAN" pegado al borde de la imagen) no se vea cortado
+           por el borde redondeado de la tarjeta. */
+        padding: 4px;
+        background: #1b1b1b;
       }
 
       .carousel-item-content {
