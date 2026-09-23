@@ -383,6 +383,9 @@
       if (recoverBox.hidden) { showRecover(); } else { hideRecover(); }
     });
     document.getElementById('recover-back').addEventListener('click', hideRecover);
+    document.getElementById('search-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); searchAnime(); }
+    });
 
     document.getElementById('recover-button').addEventListener('click', () => {
       const email = document.getElementById('recover-email').value.trim();
@@ -939,8 +942,13 @@
   <header>
     <div class="logo">VetPlex</div>
     <div class="search-bar">
-      <input type="text" class="search-input" id="search-input" placeholder="Buscar anime...">
-      <img src="https://cdn-icons-png.flaticon.com/512/122/122932.png" alt="Buscar" class="search-icon" onclick="searchAnime()">
+      <button type="button" class="search-icon-btn" onclick="searchAnime()" aria-label="Buscar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M21 21l-4.3-4.3"></path>
+        </svg>
+      </button>
+      <input type="text" class="search-input" id="search-input" placeholder="Buscar anime..." autocomplete="off" enterkeyhint="search" aria-label="Buscar anime">
     </div>
   </header>
 
@@ -3145,14 +3153,64 @@
         background-color: #1c1c1c;
         color: #f5f5f5;
       }
-      /* Si el icono no carga, su alt no debe derramarse fuera de sus 30px */
-      .search-bar .search-icon {
-        width: 30px;
-        height: 30px;
-        object-fit: contain;
-        overflow: hidden;
-        flex-shrink: 0;
+      /* Header moderno: vidrio esmerilado */
+      header {
+        background: rgba(10, 10, 12, 0.72);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
+      header .logo { letter-spacing: 0.5px; }
+
+      /* Buscador moderno: pildora con icono SVG integrado */
+      .search-bar {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 420px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 3px 12px 3px 4px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      }
+      .search-bar:focus-within {
+        border-color: #e50914;
+        background: rgba(255, 255, 255, 0.10);
+        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.28);
+      }
+      .search-bar .search-icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: #a7a7b3;
+        cursor: pointer;
+        transition: color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+      }
+      .search-bar .search-icon-btn:hover { color: #ffffff; background: rgba(255, 255, 255, 0.08); }
+      .search-bar .search-icon-btn:active { transform: scale(0.94); }
+      .search-bar .search-icon { width: 19px; height: 19px; display: block; }
+      .search-bar .search-input {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        text-shadow: none;
+        outline: none;
+        padding: 8px 6px 8px 2px;
+        margin: 0;
+        font-size: 16px;
+        color: #f5f5f5;
+      }
+      .search-bar .search-input::placeholder { color: #8e8e99; }
 
       /* Botones del banner: no heredan el width:100% global */
       .banner-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
