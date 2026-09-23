@@ -26,30 +26,239 @@
       overflow: hidden;
     }
 
+    /* ===== VetPlex Auth — pantalla completa estilo Netflix ===== */
     #overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
+      inset: 0;
       z-index: 999;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif;
+      background: #000;
+      overflow-y: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    #overlay.vp-hidden { display: none; }
+
+    .vp-auth-bg {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      padding: 6px;
+      overflow: hidden;
+    }
+    .vp-auth-bg img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      filter: blur(7px) brightness(0.42) saturate(1.15);
+      transform: scale(1.08);
+    }
+    .vp-auth-shade {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.78) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.75) 100%);
+    }
+
+    .vp-auth-top {
+      position: relative;
+      z-index: 2;
+      padding: 22px 48px;
+    }
+    .vp-logo {
+      color: #e50914;
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      line-height: 1;
+      user-select: none;
     }
 
     #auth-container {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
-      width: 400px;
-      text-align: center;
       position: relative;
-      overflow: hidden;
-      animation: flicker 3s infinite;
+      z-index: 2;
+      width: 100%;
+      max-width: 450px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.78);
+      border-radius: 8px;
+      padding: 52px 62px 40px;
+      box-sizing: border-box;
+      animation: vpCardIn 0.55s ease both;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    }
+    @keyframes vpCardIn {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Resets contra los estilos globales heredados de la pagina */
+    #overlay h1, #overlay h2 {
+      animation: none;
+      color: #fff;
+      text-shadow: none;
+      font-family: inherit;
+      margin: 0 0 10px;
+    }
+    .vp-auth-title { font-size: 32px; font-weight: 700; letter-spacing: 0.2px; }
+    .vp-auth-sub { color: #b3b3b3; font-size: 15px; margin: 0 0 26px; }
+
+    #overlay .vp-field { margin-bottom: 14px; }
+    #overlay .vp-field input {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #fff;
+      background: #333;
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 4px;
+      outline: none;
+      transition: background 0.2s, border-color 0.2s;
+      animation: none;
+      text-shadow: none;
+      box-shadow: none;
+    }
+    #overlay .vp-field input::placeholder { color: #8c8c8c; }
+    #overlay .vp-field input:focus { background: #454545; border-bottom-color: #e50914; }
+
+    #overlay .vp-btn-primary {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 26px 0 0;
+      padding: 13px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #fff;
+      background: #e50914;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      animation: none;
+      text-shadow: none;
+      box-shadow: none;
+    }
+    #overlay .vp-btn-primary:hover { background: #f6121d; }
+    #overlay .vp-btn-primary:disabled { background: #5c5c5c; cursor: default; }
+
+    #overlay .vp-btn-ghost {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: transparent;
+      border: 1px solid #737373;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      animation: none;
+      text-shadow: none;
+      box-shadow: none;
+    }
+    #overlay .vp-btn-ghost:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+
+    .vp-opts {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #b3b3b3;
+    }
+    .vp-remember { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+    #overlay .vp-remember input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      border: none;
+      background: none;
+      border-radius: 0;
+      animation: none;
+      box-shadow: none;
+      accent-color: #737373;
+    }
+    #overlay .vp-link {
+      background: none;
+      border: none;
+      padding: 0;
+      width: auto;
+      color: #b3b3b3;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      animation: none;
+      text-shadow: none;
+      box-shadow: none;
+      text-decoration: none;
+    }
+    #overlay .vp-link:hover { text-decoration: underline; color: #fff; background: none; box-shadow: none; }
+
+    .vp-error {
+      display: none;
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      background: #e87c03;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
+    .vp-error.visible { display: block; }
+    .vp-note { font-size: 13px; color: #b3b3b3; margin: 10px 0 0; line-height: 1.5; }
+    .vp-note.ok { color: #6fbf4a; }
+
+    .vp-recover { margin-top: 14px; padding-top: 14px; border-top: 1px solid #333; }
+
+    .vp-switch { margin: 34px 0 0; color: #737373; font-size: 16px; }
+    #overlay .vp-link-strong {
+      background: none;
+      border: none;
+      padding: 0;
+      width: auto;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      animation: none;
+      text-shadow: none;
+      box-shadow: none;
+    }
+    #overlay .vp-link-strong:hover { text-decoration: underline; background: none; box-shadow: none; }
+
+    .vp-captcha { margin: 14px 0 0; color: #8c8c8c; font-size: 12.5px; line-height: 1.6; }
+    .vp-captcha .vp-link { font-size: 12.5px; color: #0071eb; }
+
+    @media (max-width: 600px) {
+      .vp-auth-top { padding: 16px 20px; }
+      .vp-logo { font-size: 30px; }
+      #auth-container {
+        padding: 36px 26px 28px;
+        margin: 0;
+        max-width: none;
+        min-height: calc(100vh - 62px);
+        border-radius: 0;
+        background: rgba(0, 0, 0, 0.88);
+      }
+      .vp-auth-bg { grid-template-columns: repeat(4, 1fr); }
     }
 
     @keyframes flicker {
@@ -131,20 +340,6 @@
       }
     }
 
-    .toggle-link {
-      background: none;
-      border: none;
-      color: #ffcc00;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 16px;
-      transition: color 0.3s;
-    }
-
-    .toggle-link:hover {
-      color: #ff4500;
-    }
 
     #bats {
       position: absolute;
@@ -221,8 +416,8 @@
 
   </style>
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBGymYEny8_sW8LremajNvVrDzF2OvRqtk",
@@ -236,84 +431,187 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const overlay = document.getElementById('overlay');
-      const authContainer = document.getElementById('auth-container');
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
+    const overlay = document.getElementById('overlay');
+    const loginBox = document.getElementById('login-form');
+    const registerBox = document.getElementById('register-form');
+    const authTitle = document.getElementById('auth-title');
+    const authSub = document.getElementById('auth-sub');
+    const switchText = document.getElementById('auth-switch-text');
+    const switchBtn = document.getElementById('switch-auth');
+    const loginError = document.getElementById('login-error');
+    const registerError = document.getElementById('register-error');
+    const recoverBox = document.getElementById('recover-box');
+    const recoverMsg = document.getElementById('recover-msg');
 
-      const showAuthContainer = () => {
-        overlay.classList.add('active');
-        authContainer.style.display = 'block';
-      };
+    const showAuth = () => overlay.classList.remove('vp-hidden');
+    const hideAuth = () => overlay.classList.add('vp-hidden');
 
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          overlay.style.display = 'none';
-        } else {
-          showAuthContainer();
-        }
-      });
+    const friendlyError = (error) => {
+      switch (error && error.code) {
+        case 'auth/invalid-email': return 'Escribe un correo electrónico válido.';
+        case 'auth/user-not-found': return 'No encontramos una cuenta con ese correo electrónico.';
+        case 'auth/wrong-password': return 'Contraseña incorrecta. Inténtalo de nuevo.';
+        case 'auth/invalid-credential': return 'El correo o la contraseña no son correctos.';
+        case 'auth/email-already-in-use': return 'Este correo ya está registrado. Inicia sesión.';
+        case 'auth/weak-password': return 'La contraseña debe tener al menos 6 caracteres.';
+        case 'auth/too-many-requests': return 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.';
+        case 'auth/network-request-failed': return 'Error de red. Revisa tu conexión a internet.';
+        default: return 'Ocurrió un error. Inténtalo de nuevo.';
+      }
+    };
 
-      document.getElementById("register-button").addEventListener("click", function() {
-        const email = document.getElementById("register-email").value;
-        const password = document.getElementById("register-password").value;
-        createUserWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            alert("¡Registro exitoso!");
-            overlay.style.display = 'none';
-          })
-          .catch((error) => {
-            alert("Error en el registro: " + error.message);
-          });
-      });
+    const showError = (el, message) => { el.textContent = message; el.classList.add('visible'); };
+    const clearError = (el) => { el.textContent = ''; el.classList.remove('visible'); };
 
-      document.getElementById("login-button").addEventListener("click", function() {
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        signInWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            alert("¡Inicio de sesión exitoso!");
-            overlay.style.display = 'none';
-          })
-          .catch((error) => {
-            alert("Error en el inicio de sesión: " + error.message);
-          });
-      });
+    const showLogin = () => {
+      loginBox.style.display = 'block';
+      registerBox.style.display = 'none';
+      authTitle.textContent = 'Iniciar sesión';
+      authSub.textContent = 'Tus animes favoritos te esperan.';
+      switchText.textContent = '¿Primera vez en VetPlex?';
+      switchBtn.textContent = 'Regístrate ahora.';
+      clearError(loginError);
+      recoverBox.hidden = true;
+      recoverMsg.textContent = '';
+      recoverMsg.classList.remove('ok');
+    };
 
-      document.getElementById("forgot-password").addEventListener("click", function() {
-        const email = prompt("Introduce tu correo para recuperar la contraseña:");
-        sendPasswordResetEmail(auth, email)
-          .then(() => {
-            alert("Se ha enviado un enlace de recuperación a tu correo.");
-          })
-          .catch((error) => {
-            alert("Error al enviar el correo de recuperación: " + error.message);
-          });
+    const showRegister = () => {
+      loginBox.style.display = 'none';
+      registerBox.style.display = 'block';
+      authTitle.textContent = 'Regístrate';
+      authSub.textContent = 'Crea tu cuenta gratis y empieza a ver anime.';
+      switchText.textContent = '¿Ya tienes cuenta?';
+      switchBtn.textContent = 'Inicia sesión.';
+      clearError(registerError);
+    };
+
+    let registering = false;
+    switchBtn.addEventListener('click', () => {
+      registering = !registering;
+      if (registering) { showRegister(); } else { showLogin(); }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) { hideAuth(); } else { showAuth(); }
+    });
+
+    const setLoading = (btn, loading, label) => {
+      btn.disabled = loading;
+      btn.textContent = loading ? 'Cargando...' : label;
+    };
+
+    document.getElementById('login-button').addEventListener('click', () => {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-button');
+      clearError(loginError);
+      if (!email || !password) { showError(loginError, 'Escribe tu correo y tu contraseña.'); return; }
+      setLoading(btn, true);
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => { hideAuth(); })
+        .catch((error) => { showError(loginError, friendlyError(error)); })
+        .finally(() => { setLoading(btn, false, 'Iniciar sesión'); });
+    });
+
+    document.getElementById('register-button').addEventListener('click', () => {
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value;
+      const btn = document.getElementById('register-button');
+      clearError(registerError);
+      if (!email || !password) { showError(registerError, 'Escribe un correo y una contraseña.'); return; }
+      if (password.length < 6) { showError(registerError, 'La contraseña debe tener al menos 6 caracteres.'); return; }
+      setLoading(btn, true);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => { hideAuth(); })
+        .catch((error) => { showError(registerError, friendlyError(error)); })
+        .finally(() => { setLoading(btn, false, 'Registrarse'); });
+    });
+
+    document.getElementById('forgot-password').addEventListener('click', () => {
+      recoverBox.hidden = !recoverBox.hidden;
+      recoverMsg.textContent = '';
+      recoverMsg.classList.remove('ok');
+    });
+
+    document.getElementById('recover-button').addEventListener('click', () => {
+      const email = document.getElementById('recover-email').value.trim();
+      recoverMsg.classList.remove('ok');
+      if (!email) { recoverMsg.textContent = 'Escribe tu correo electrónico.'; return; }
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          recoverMsg.textContent = 'Listo. Revisa tu correo, te enviamos el enlace de recuperación.';
+          recoverMsg.classList.add('ok');
+        })
+        .catch((error) => { recoverMsg.textContent = friendlyError(error); });
+    });
+
+    const enterPairs = [['login-email', 'login-button'], ['login-password', 'login-button'], ['register-email', 'register-button'], ['register-password', 'register-button']];
+    enterPairs.forEach((pair) => {
+      document.getElementById(pair[0]).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { document.getElementById(pair[1]).click(); }
       });
     });
+
+    showLogin();
   </script>
 </head>
 
 <body>
   <div id="overlay">
+    <div class="vp-auth-bg" aria-hidden="true">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/01ec367b44f0a568430a957e042639af.jpg" alt="" loading="lazy">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/0a34f193aa46a27cd75f5ee553834c41.jpg" alt="" loading="lazy">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/18638d44e180fd1b51870106b88e46e4.jpg" alt="" loading="lazy">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/3b70d9f3c112faa30940bcc26f1cff98.jpg" alt="" loading="lazy">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/6533e54a54f7a69c806920607bc8238e.jpg" alt="" loading="lazy">
+      <img src="https://images.justwatch.com/poster/261483319/s718/boku-no-hero-academy.jpg" alt="" loading="lazy">
+      <img src="https://m.media-amazon.com/images/M/MV5BNzEzZjljMzAtNjJmMi00MTg3LTg1MDEtYWRiZWE4MjNlZTZlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="" loading="lazy">
+      <img src="https://m.media-amazon.com/images/M/MV5BOTBhOTlkNDctMDg1Zi00MGViLWJhMTUtMTU1OWEyYTUzZjdhXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_FMjpg_UX1000_.jpg" alt="" loading="lazy">
+      <div class="vp-auth-shade"></div>
+    </div>
+    <header class="vp-auth-top">
+      <span class="vp-logo">VETPLEX</span>
+    </header>
     <div id="auth-container">
-      <h1>VetPlex: ¡Feliz Halloween !</h1>
-      <h2>¡Regístrate o Inicia Sesión!</h2>
+      <h1 class="vp-auth-title" id="auth-title">Iniciar sesi&oacute;n</h1>
+      <p class="vp-auth-sub" id="auth-sub">Tus animes favoritos te esperan.</p>
+
       <div id="login-form">
-        <input type="email" id="login-email" placeholder="Correo Electrónico">
-        <input type="password" id="login-password" placeholder="Contraseña">
-        <button id="login-button">Iniciar Sesión</button>
-        <button id="forgot-password" class="toggle-link">¿Olvidaste tu contraseña?</button>
-        <button class="toggle-link" onclick="document.getElementById('login-form').style.display='none';document.getElementById('register-form').style.display='block';">¿No tienes cuenta? ¡Regístrate!</button>
+        <div class="vp-field">
+          <input type="email" id="login-email" placeholder="Correo electr&oacute;nico" autocomplete="email">
+        </div>
+        <div class="vp-field">
+          <input type="password" id="login-password" placeholder="Contrase&ntilde;a" autocomplete="current-password">
+        </div>
+        <p class="vp-error" id="login-error" role="alert"></p>
+        <button type="button" id="login-button" class="vp-btn-primary">Iniciar sesi&oacute;n</button>
+        <div class="vp-opts">
+          <label class="vp-remember"><input type="checkbox" id="remember-me" checked> Recu&eacute;rdame</label>
+          <button type="button" id="forgot-password" class="vp-link">&iquest;Necesitas ayuda?</button>
+        </div>
+        <div class="vp-recover" id="recover-box" hidden>
+          <div class="vp-field">
+            <input type="email" id="recover-email" placeholder="Correo electr&oacute;nico para recuperar">
+          </div>
+          <button type="button" id="recover-button" class="vp-btn-ghost">Enviar enlace de recuperaci&oacute;n</button>
+          <p class="vp-note" id="recover-msg"></p>
+        </div>
       </div>
 
       <div id="register-form" style="display:none;">
-        <input type="email" id="register-email" placeholder="Correo Electrónico">
-        <input type="password" id="register-password" placeholder="Contraseña">
-        <button id="register-button">Regístrate</button>
-        <button class="toggle-link" onclick="document.getElementById('register-form').style.display='none';document.getElementById('login-form').style.display='block';">¿Ya tienes cuenta? ¡Inicia Sesión!</button>
+        <div class="vp-field">
+          <input type="email" id="register-email" placeholder="Correo electr&oacute;nico" autocomplete="email">
+        </div>
+        <div class="vp-field">
+          <input type="password" id="register-password" placeholder="Contrase&ntilde;a (m&iacute;nimo 6 caracteres)" autocomplete="new-password">
+        </div>
+        <p class="vp-error" id="register-error" role="alert"></p>
+        <button type="button" id="register-button" class="vp-btn-primary">Registrarse</button>
       </div>
+
+      <p class="vp-switch"><span id="auth-switch-text">&iquest;Primera vez en VetPlex?</span> <button type="button" id="switch-auth" class="vp-link-strong">Reg&iacute;strate ahora.</button></p>
+      <p class="vp-captcha">Esta p&aacute;gina est&aacute; protegida por Google reCAPTCHA para comprobar que no eres un robot. <button type="button" class="vp-link">M&aacute;s informaci&oacute;n.</button></p>
     </div>
   </div>
 
