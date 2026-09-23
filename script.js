@@ -38,7 +38,7 @@ const animes = {
   "description": "En una sociedad futurista, un joven con la capacidad de ver ecos del pasado se convierte en la clave para desentrañar un misterio antiguo que amenaza con desestabilizar el equilibrio del mundo. A medida que viaja a través de los recuerdos de personas olvidadas, descubre secretos que cambiarán su vida para siempre.", 
   "imageUrl": "https://www.royalroadcdn.com/public/covers-large/80798-echoes-of-eternity.jpg?time=1706697588"
 },
-        { title: 'The rise Of Kioshi', year: 2024, description: 'Avatar, The Last Airbender: The Rise of Kyoshi, también aludida únicamente como The Rise of Kyoshi, es la primera novela de fantasía estadounidense de la saga de Crónicas del Avatar perteneciente a la literatura juvenil publicada el 16 de julio de 2019 por Amulet Books de la editorial Abrams.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BZDY2YmVjYWYtZTYwNS00ZWY1LTgwNzQtMGM2OTEwMjg3OGRmXkEyXkFqcGdeQXVyNTI4MzI4NTQ@._V1_FMjpg_UX1000_.jpg' },
+        { title: 'The rise Of Kioshi', year: 2024, description: 'Avatar, The Last Airbender: The Rise of Kyoshi, también aludida únicamente como The Rise of Kyoshi, es la primera novela de fantasía estadounidense de la saga de Crónicas del Avatar perteneciente a la literatura juvenil publicada el 16 de julio de 2019 por Amulet Books de la editorial Abrams.', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4b/The_Rise_of_Kyoshi_book_cover.jpg' },
           
  
         {
@@ -52,10 +52,10 @@ const animes = {
          
         { title: 'Shikanoko Nokonoko Koshitantan', year: 2024,description: 'Torako Koshi rescata a una extraña niña-ciervo que cuelga de unos cables eléctricos de camino a la escuela. Luego, la niña pronto se transfiere a su escuela, se presenta como Noko Shikanoko y comienza a arrastrar a Torako a sus extrañas travesuras.', imageUrl: 'https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/6533e54a54f7a69c806920607bc8238e.jpg' },
         { title: 'Fairy Tail: 100-nen Quest', year: 2024, description: 'Fairy Tail, que trata sobre Natsu Dragneel y su equipo del gremio que intentan completar una misión de un siglo de duración que nadie ha logrado terminar', imageUrl: 'https://a.storyblok.com/f/178900/1984x2805/ea41558285/fairy-tail-100-years-quest-main-visual.jpg/m/filters:quality(95)format(webp)' },
-        { title: 'Isekai Yururi Kikou', year: 2024, description: 'Un viaje por otro mundo', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNzUyNDFjNGUtZjBhNS00MTQ4LTkxNTEtMGYyMjFkNjNjZmE2XkEyXkFqcGdeQXVyNjA5MDIyMzU@._V1_.jpg' }
+        { title: 'Isekai Yururi Kikou', year: 2024, description: 'Un viaje por otro mundo', imageUrl: 'https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1558553991i/45993960.jpg' }
     ],
     'recomendados': [
-        { title: 'One Piece', year: 1999, description: 'Piratas buscan el legendario tesoro One Piece para convertirse en el Rey de los Piratas.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BOTI1MmI4NzItYTg2Yy00NmVkLWIwY2EtZTdhZTNkOTQ5OTZjXkEyXkFqcGdeQXVyNzI3NjY3NjQ@._V1_FMjpg_UX1000_.jpg' },
+        { title: 'One Piece', year: 1999, description: 'Piratas buscan el legendario tesoro One Piece para convertirse en el Rey de los Piratas.', imageUrl: 'https://images.justwatch.com/poster/248497985/s332/one-piece' },
           {
     "title": "Code Geass",
     "year": 2006,
@@ -108,13 +108,13 @@ const animes = {
     "title": "Fullmetal Alchemist: Brotherhood", 
     "year": 2009, 
     "description": "Dos hermanos alquimistas buscan la Piedra Filosofal para restaurar sus cuerpos.", 
-    "imageUrl": "https://m.media-amazon.com/images/M/MV5BZmEzN2YzOTItMDI5MS00MGU4LWI1NWQtOTg5ZThhNGQwYTEzXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_.jpg" 
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/9d/Fullmetal123.jpg" 
   },
           { 
     "title": "Death Note", 
     "year": 2006, 
     "description": "Un estudiante encuentra un cuaderno que le permite matar a cualquiera cuyo nombre escriba en él.", 
-    "imageUrl": "https://m.media-amazon.com/images/M/MV5BNjRiNmNjMmMtN2U2Yi00ODgxLTk3OTMtMmI1MTI1NjYyZTEzXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg" 
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6f/Death_Note_Vol_1.jpg" 
   },
   { 
     "title": "My Hero Academia", 
@@ -147,7 +147,7 @@ const animes = {
     "title": "One Punch Man", 
     "year": 2015, 
     "description": "Un superhéroe que puede derrotar a cualquier enemigo con un solo golpe busca un verdadero desafío.", 
-    "imageUrl": "https://m.media-amazon.com/images/M/MV5BZjJlNzE5YzEtYzQwYS00NTBjLTk5YzAtYzUwOWQyM2E3OGI2XkEyXkFqcGdeQXVyNTgyNTA4MjM@._V1_.jpg" 
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/c/c3/OnePunchMan_manga_cover.png" 
   },
   { 
     "title": "Bleach", 
@@ -183,7 +183,7 @@ const animes = {
     "title": "Hunter x Hunter", 
     "year": 2011, 
     "description": "Un joven busca a su padre y se convierte en un cazador profesional.", 
-    "imageUrl": "https://m.media-amazon.com/images/M/MV5BNGM0YTk3MWEtN2JlZC00ZmZmLWIwMDktZTMxZGE5Zjc2MGExXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg" 
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/8/82/Hunter_%C3%97_Hunter_%282011%29.png" 
   },
         { title: 'TSUKIMICHI -Fantasía iluminada por la luna', year: 2021, description: 'Misumi Makoto, un estudiante de secundaria, es transportado a otro mundo por el dios Tsukuyomi para convertirse en un héroe. Sin embargo, una diosa decide que no lo quiere como héroe y lo envía a los confines del mundo con solo la habilidad de entender los lenguajes de los seres no humanos. Con la ayuda de algunos poderes otorgados por Tsukuyomi, Makoto debe encontrar su propio camino y lugar en este nuevo mundo', imageUrl: 'https://cdn.shopify.com/s/files/1/0259/6166/0519/files/Screenshot_20210429-221952_Facebook_480x480.jpg?v=1619759932' },
         { title: 'Fruits Basket', year: 2021, description: 'Tohru Honda pensó que su vida se encaminaba hacia la desgracia cuando una tragedia familiar la dejó viviendo en una tienda de campaña. Cuando el misterioso clan Soma descubre su pequeña casa, de repente se encuentra viviendo con Yuki, Kyo y Shigure Soma. Pero rápidamente descubre que su familia tiene un extraño secreto: cuando son abrazados por el sexo opuesto, ¡se convierten en los animales del Zodíaco!', imageUrl: 'https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/0a34f193aa46a27cd75f5ee553834c41.jpg' },
@@ -193,7 +193,7 @@ const animes = {
     ],
     'populares': [
          
-        { title: 'Solo Leveling', year: 2024, description: 'Sigue la historia de Sung Jin-Woo, el cazador más débil de todos en un mundo donde los humanos y los monstruos están conectados por una extraña puerta. Jin-Woo obtiene habilidades especiales y comienza a subir de nivel rápidamente.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BYWMwYmYwNjMtMmE0MC00ODdhLTgzYzQtYzA3MDQ5OWRmZWNhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg' },
+        { title: 'Solo Leveling', year: 2024, description: 'Sigue la historia de Sung Jin-Woo, el cazador más débil de todos en un mundo donde los humanos y los monstruos están conectados por una extraña puerta. Jin-Woo obtiene habilidades especiales y comienza a subir de nivel rápidamente.', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/6/6c/Solo_Leveling_Volume_1_Cover.jpg' },
          {
         "title": "Chainsaw Man",
         "year": 2024,
@@ -212,11 +212,11 @@ const animes = {
         "description": "Tanjiro y sus amigos viajan a la Villa de los Herreros para reparar su espada y enfrentarse a nuevos demonios.",
         "imageUrl": "https://pbs.twimg.com/media/FvLSpk3WAAEeDwU?format=jpg&name=4096x4096"
     },
-        { title: 'Hunter x Hunter', year: 2011, description: 'Un joven emprende una búsqueda épica para encontrar a su padre y convertirse en cazador.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNGM0YTk3MWEtN2JlZC00ZmZmLWIwMDktZTMxZGE5Zjc2MGExXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_FMjpg_UX1000_.jpg' }
+        { title: 'Hunter x Hunter', year: 2011, description: 'Un joven emprende una búsqueda épica para encontrar a su padre y convertirse en cazador.', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/82/Hunter_%C3%97_Hunter_%282011%29.png' }
       
     ],
     'vistos': [
-        { title: 'Dragon Ball Z', year: 1989, description: 'Guerreros luchan para proteger la Tierra de poderosos enemigos extraterrestres.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMGU2NjZhMmUtNTYzYS00OTMyLTkzZDAtMTkzNDIwNWFkM2I0XkEyXkFqcGdeQXVyMTY3NTgwODk5._V1_FMjpg_UX1000_.jpg' },
+        { title: 'Dragon Ball Z', year: 1989, description: 'Guerreros luchan para proteger la Tierra de poderosos enemigos extraterrestres.', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c9/DB_Tank%C5%8Dbon.png' },
         { title: 'Fullmetal Alchemist: Brotherhood', year: 2009, description: 'Dos hermanos usan alquimia para buscar la piedra filosofal y restaurar sus cuerpos.', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNDczZWMyMjEtZDI0ZS00YThjLWE2MjEtNTIxNmVmZDhkNDg5XkEyXkFqcGc@._V1_.jpg' },
         { title: 'Death Note', year: 2006, description: 'Un estudiante encuentra un cuaderno que mata a quien escriba su nombre en él.', imageUrl: 'https://es.web.img3.acsta.net/pictures/14/05/28/20/47/033239.jpg' }
     ]
