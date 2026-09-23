@@ -134,7 +134,7 @@
   </style>
   <link rel="stylesheet" href="hidden_files/auth-cinematic.css">
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     const firebaseConfig = {
@@ -146,7 +146,7 @@
       appId: "1:485618641909:web:8030f45a4ad757a4878ebc",
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
     const overlay = document.getElementById('overlay');
@@ -973,8 +973,9 @@
 
   <!-- Agregar el SDK de Firebase -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     // Tu configuración de Firebase
     const firebaseConfig = {
@@ -988,9 +989,12 @@
       measurementId: "G-3QGGL7CWQ0"
     };
 
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
+    // Inicializar Firebase (una sola app compartida entre módulos)
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth(app);
+    // UID real del usuario logueado (antes era "user123" fijo para todos)
+    const currentUid = () => (auth.currentUser && auth.currentUser.uid) || 'anon';
 
     // Función para mostrar el modal
     function showModal(title, description, year) {
@@ -1007,12 +1011,15 @@
 
     // Función para agregar a la lista
     function addToList(anime) {
-      const userId = "user123"; // Esto debería ser dinámico en una aplicación real
-      set(ref(database, 'users/' + userId + '/list/' + anime), {
+      push(ref(database, 'users/' + currentUid() + '/list'), {
         name: anime,
-        added: true
+        added: true,
+        ts: Date.now()
       }).then(() => {
-        alert(anime + " ha sido añadido a tu lista.");
+        const el = document.getElementById("vote-message");
+        el.textContent = anime + " añadido a tu lista.";
+        el.style.display = "block";
+        setTimeout(() => { el.style.display = "none"; }, 2000);
       });
     }
 
@@ -1025,9 +1032,9 @@
 
     // Función para votar
     function vote(type) {
-      const userId = "user123"; // Esto debería ser dinámico en una aplicación real
       const animeTitle = document.getElementById("modal-title").innerText;
-      set(ref(database, 'votes/' + userId + '/' + animeTitle), {
+      push(ref(database, 'votes/' + currentUid()), {
+        anime: animeTitle,
         type: type,
         timestamp: Date.now()
       }).then(() => {
@@ -1038,6 +1045,7 @@
     // Función para mostrar el mensaje de agradecimiento por el voto
     function showVoteMessage() {
       const messageElement = document.getElementById("vote-message");
+      messageElement.textContent = "Gracias por tu voto!";
       messageElement.style.display = "block";
       setTimeout(() => {
         messageElement.style.display = "none";
@@ -1616,7 +1624,9 @@
 
     <script type="module">
       import {
-        initializeApp
+        initializeApp,
+        getApps,
+        getApp
       } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
       import {
         getDatabase,
@@ -1634,7 +1644,7 @@
         appId: "1:485618641909:web:8030f45a4ad757a4878ebc",
         measurementId: "G-3QGGL7CWQ0"
       };
-      const app = initializeApp(firebaseConfig);
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
       const database = getDatabase(app);
       const animeForm = document.getElementById('animeForm');
       const animeCarousel = document.getElementById('animeCarousel');
@@ -1930,7 +1940,9 @@
     <script type="module">
       // Importar las funciones necesarias de Firebase
       import {
-        initializeApp
+        initializeApp,
+        getApps,
+        getApp
       } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
       import {
         getDatabase,
@@ -1949,7 +1961,7 @@
         measurementId: "G-3QGGL7CWQ0"
       };
       // Inicializar Firebase
-      const app = initializeApp(firebaseConfig);
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
       const database = getDatabase(app);
       // Función para enviar el reporte a Firebase
       function sendReport(problemType) {
