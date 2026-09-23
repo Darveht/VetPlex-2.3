@@ -111,8 +111,10 @@
 
 
     #bats {
-      /* fixed (no absolute): el translateX(±100vw) de la animación ya no
-         expande el scroll horizontal del documento en móvil */
+      /* Capa fija a pantalla completa: ella NO se anima. Un translateX(±100vw)
+         aplicado a un elemento fixed sí expande el scroll horizontal del
+         documento (comprobado en QA). La animación vive en cada .bat, que
+         vuela en formación dentro de la capa con overflow:hidden. */
       position: fixed;
       top: 0;
       left: 0;
@@ -121,7 +123,6 @@
       overflow: hidden;
       pointer-events: none;
       z-index: -1;
-      animation: batsFly 8s infinite linear;
     }
 
     @keyframes batsFly {
@@ -139,6 +140,9 @@
       width: 80px;
       height: auto;
       z-index: -1;
+      /* Cada murciélago vuela en formación: mismo timing que la capa anterior,
+         pero el transform en los hijos no expande el scroll del documento. */
+      animation: batsFly 8s infinite linear;
     }
 
     .bat:nth-child(1) {
@@ -1805,9 +1809,12 @@
 
       /* Estilo de las brujas */
       .bruja {
-        /* fixed (no absolute): la animación las lleva hasta left:100% y con
-           absolute expandían el scroll horizontal del documento en móvil */
+        /* fixed anclada a la izquierda: el vuelo se anima con transform.
+           Los keyframes originales usaban left:100% y eso expandía el scroll
+           horizontal del documento (comprobado en QA). */
         position: fixed;
+        top: -10%;
+        left: 0;
         width: 80px;
         /* Tamaño de las brujas */
         z-index: 1000;
@@ -1817,47 +1824,35 @@
       /* Animaciones de las brujas */
       @keyframes volar1 {
         0% {
-          top: -10%;
+          transform: translate(0, 0);
           /* Comienza fuera de la pantalla por la parte superior */
-          left: 0%;
-          /* Comienza en el lado izquierdo */
         }
 
         50% {
-          top: 40%;
-          /* Vuela hacia abajo */
-          left: 40%;
-          /* Se mueve a la derecha */
+          transform: translate(40vw, 50vh);
+          /* Vuela hacia abajo y a la derecha */
         }
 
         100% {
-          top: -10%;
-          /* Regresa fuera de la pantalla por la parte superior */
-          left: 80%;
-          /* Sale por la derecha */
+          transform: translate(80vw, 0);
+          /* Regresa arriba y sale por la derecha */
         }
       }
 
       @keyframes volar2 {
         0% {
-          top: -10%;
-          /* Comienza fuera de la pantalla por la parte superior */
-          left: 50%;
-          /* Comienza en el centro */
+          transform: translate(50vw, 0);
+          /* Comienza fuera de la pantalla por la parte superior, en el centro */
         }
 
         50% {
-          top: 20%;
-          /* Vuela un poco hacia abajo */
-          left: 10%;
-          /* Se mueve a la izquierda */
+          transform: translate(10vw, 30vh);
+          /* Vuela un poco hacia abajo y a la izquierda */
         }
 
         100% {
-          top: -10%;
-          /* Regresa fuera de la pantalla por la parte superior */
-          left: 100%;
-          /* Sale por la derecha */
+          transform: translate(100vw, 0);
+          /* Regresa arriba y sale por la derecha */
         }
       }
 
