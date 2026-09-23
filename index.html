@@ -25,7 +25,7 @@
          y franja azulada en iPhone). El fondo oscuro lo define background-color
          en reglas posteriores (#111). */
       color: #fff;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
 
@@ -806,12 +806,14 @@
     }
 
     .carousel-title {
-      font-size: 24px;
-      margin-bottom: 10px;
-      color: #FFD700;
-      text-transform: uppercase;
-      border-bottom: 2px solid #e50914;
-      padding-bottom: 5px;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.2px;
+      margin: 18px 16px 6px;
+      padding-bottom: 0;
+      border-bottom: none;
+      text-transform: none;
     }
 
     .carousel {
@@ -828,6 +830,43 @@
       padding: 10px;
       border-radius: 4px;
       scroll-snap-align: start;
+    }
+
+    /* Catálogo de la plataforma: riel horizontal estilo app de streaming */
+    .vp-rail {
+      gap: 12px;
+      padding: 6px 16px 16px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .vp-rail::-webkit-scrollbar { display: none; }
+    .vp-card {
+      flex: 0 0 auto;
+      width: 132px;
+      scroll-snap-align: start;
+      cursor: pointer;
+    }
+    .vp-card img {
+      width: 132px;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #222;
+      display: block;
+    }
+    .vp-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin: 8px 2px 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vp-card p {
+      font-size: 12px;
+      color: #9a9aa3;
+      margin: 0 2px;
     }
 
     html, body {
@@ -910,25 +949,10 @@
     </div>
   </div>
 
-  <!-- Carruseles de animes -->
-  <div class="carousel-container">
-    <div class="carousel-title"> Emisión</div>
-    <div class="carousel" id="carousel-emision"></div>
-  </div>
-
-  <div class="carousel-container">
-    <div class="carousel-title">Mas Recomendados</div>
-    <div class="carousel" id="carousel-recomendados"></div>
-  </div>
-
-  <div class="carousel-container">
-    <div class="carousel-title">Los mas Populares</div>
-    <div class="carousel" id="carousel-populares"></div>
-  </div>
-
-  <div class="carousel-container">
-    <div class="carousel-title"> Más Vistas</div>
-    <div class="carousel" id="carousel-vistos"></div>
+  <!-- Catálogo de animes (se llena desde Firebase; oculto si no hay datos) -->
+  <div class="carousel-container" id="vp-catalogo-wrap" hidden>
+    <div class="carousel-title">Animes</div>
+    <div class="carousel vp-rail" id="vp-catalogo"></div>
   </div>
 
   <div id="modal" class="modal">
@@ -1019,6 +1043,13 @@
         messageElement.style.display = "none";
       }, 2000);
     }
+
+    // Los botones usan onclick="...": las funciones de un módulo no son
+    // globales, así que se exponen explícitamente en window.
+    window.showModal = showModal;
+    window.closeModal = closeModal;
+    window.addToList = addToList;
+    window.vote = vote;
   </script>
 </body>
 </html>
@@ -1607,6 +1638,8 @@
       const database = getDatabase(app);
       const animeForm = document.getElementById('animeForm');
       const animeCarousel = document.getElementById('animeCarousel');
+      const catalogo = document.getElementById('vp-catalogo');
+      const catalogoWrap = document.getElementById('vp-catalogo-wrap');
       const successDiv = document.getElementById('success');
       const errorDiv = document.getElementById('error');
       const closeBtn = document.getElementById('closeBtn');
@@ -1654,6 +1687,8 @@
         const animesRef = ref(database, 'animes');
         onValue(animesRef, (snapshot) => {
           animeCarousel.innerHTML = ""; // Limpiar la lista antes de volver a cargar
+          if (catalogo) catalogo.innerHTML = "";
+          let catalogCount = 0;
           snapshot.forEach((childSnapshot) => {
             const anime = childSnapshot.val();
             const animeCard = document.createElement('div');
@@ -1665,7 +1700,29 @@
           `;
             animeCard.addEventListener('click', () => showAnimeInfo(anime));
             animeCarousel.appendChild(animeCard);
+            // Tarjeta del catálogo de la plataforma (misma data de Firebase)
+            if (catalogo) {
+              const card = document.createElement('article');
+              card.className = 'vp-card';
+              const img = document.createElement('img');
+              img.src = anime.imageUrl;
+              img.alt = anime.title;
+              img.loading = 'lazy';
+              img.onerror = () => card.remove(); // póster roto: fuera, sin icono roto
+              const h3 = document.createElement('h3');
+              h3.textContent = anime.title;
+              const p = document.createElement('p');
+              p.textContent = anime.year || '';
+              card.append(img, h3, p);
+              card.addEventListener('click', () => {
+                if (window.showModal) window.showModal(anime.title, anime.synopsis, anime.year);
+              });
+              catalogo.appendChild(card);
+              catalogCount++;
+            }
           });
+          // Mostrar la sección solo si hay animes; si no, queda oculta
+          if (catalogoWrap) catalogoWrap.hidden = catalogCount === 0;
         });
       }
       // Mostrar información del anime
@@ -1721,17 +1778,17 @@
       });
       // Búsqueda de anime
       function searchAnime() {
-        const searchInput = document.getElementById('search-input').value.toLowerCase();
-        const animes = document.querySelectorAll('.anime-card');
-        animes.forEach(anime => {
-          const title = anime.querySelector('h3').textContent.toLowerCase();
-          if (title.includes(searchInput)) {
-            anime.style.display = 'block';
-          } else {
-            anime.style.display = 'none';
-          }
+        const input = document.getElementById('search-input');
+        const q = (input ? input.value : '').toLowerCase().trim();
+        document.querySelectorAll('.anime-card, .vp-card').forEach(card => {
+          const h3 = card.querySelector('h3');
+          const title = h3 ? h3.textContent.toLowerCase() : '';
+          card.style.display = title.includes(q) ? '' : 'none';
         });
       }
+      // El botón y la tecla Enter usan searchAnime(): exponerla globalmente
+      // (las funciones de un módulo no son visibles para onclick).
+      window.searchAnime = searchAnime;
       // Cargar animes al iniciar
       displayAnimes();
     </script>
@@ -3100,6 +3157,9 @@
         .section-title h2 { font-size: 20px; }
         .carousel { gap: 8px; padding: 8px; }
         .carousel-item { min-width: 140px; max-width: 140px; }
+        .vp-card { width: 124px; }
+        .vp-card img { width: 124px; }
+        .vp-rail { gap: 10px; padding: 4px 12px 14px; }
         .carousel-container { margin: 12px; width: auto; max-width: 100%; }
 
         /* Sin animaciones decorativas infinitas en móvil: el sway de h1/h2
