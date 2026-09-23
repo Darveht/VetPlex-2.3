@@ -26,267 +26,7 @@
       overflow: hidden;
     }
 
-    /* ===== VetPlex Auth — pantalla completa estilo Netflix ===== */
-    #overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif;
-      background: #000;
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      color-scheme: dark;
-    }
-    #overlay.vp-hidden { display: none; }
 
-    /* El fondo queda anclado al overlay (que nunca hace scroll); el contenido
-       hace scroll en .vp-auth-scroll. Asi el fondo no se mueve "solo" en iOS. */
-    .vp-auth-bg {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 6px;
-      padding: 6px;
-      overflow: hidden;
-    }
-    .vp-auth-bg img {
-      width: 100%;
-      height: 100vh;
-      object-fit: cover;
-      filter: blur(7px) brightness(0.42) saturate(1.15);
-      transform: scale(1.08);
-    }
-    .vp-auth-shade {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.78) 100%),
-        linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.75) 100%);
-    }
-
-    /* Contenedor con scroll: solo el contenido se mueve, el fondo queda fijo */
-    .vp-auth-scroll {
-      position: relative;
-      z-index: 1;
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .vp-auth-top {
-      position: relative;
-      z-index: 2;
-      padding: 22px 48px;
-    }
-    .vp-logo {
-      color: #e50914;
-      font-size: 42px;
-      font-weight: 900;
-      letter-spacing: 4px;
-      line-height: 1;
-      user-select: none;
-    }
-
-    #auth-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 450px;
-      margin: auto;
-      background: rgba(0, 0, 0, 0.78);
-      border-radius: 8px;
-      padding: 52px 62px 40px;
-      box-sizing: border-box;
-      animation: vpCardIn 0.55s ease both;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-    }
-    @keyframes vpCardIn {
-      from { opacity: 0; transform: translateY(26px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Resets contra los estilos globales heredados de la pagina */
-    #overlay h1, #overlay h2 {
-      animation: none;
-      color: #fff;
-      text-shadow: none;
-      font-family: inherit;
-      margin: 0 0 10px;
-    }
-    .vp-auth-title { font-size: 32px; font-weight: 700; letter-spacing: 0.2px; }
-    .vp-auth-sub { color: #b3b3b3; font-size: 15px; margin: 0 0 26px; }
-
-    #overlay .vp-field { margin-bottom: 14px; }
-    #overlay .vp-field input {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 14px 16px;
-      font-size: 16px;
-      font-family: inherit;
-      color: #fff;
-      background: #333;
-      border: none;
-      border-bottom: 2px solid transparent;
-      border-radius: 4px;
-      outline: none;
-      transition: background 0.2s, border-color 0.2s;
-      animation: none;
-      text-shadow: none;
-      box-shadow: none;
-    }
-    #overlay .vp-field input::placeholder { color: #8c8c8c; opacity: 1; }
-    #overlay .vp-field input:focus { background: #454545; border-bottom-color: #e50914; }
-    /* El gestor de contraseñas del navegador pinta los campos autocompletados
-       con sus propios colores (en modo oscuro, casi negros): forzar el estilo VetPlex */
-    #overlay .vp-field input:-webkit-autofill,
-    #overlay .vp-field input:-webkit-autofill:hover,
-    #overlay .vp-field input:-webkit-autofill:focus,
-    #overlay .vp-field input:-webkit-autofill:active {
-      -webkit-text-fill-color: #fff;
-      -webkit-box-shadow: 0 0 0 80px #333 inset;
-      box-shadow: 0 0 0 80px #333 inset;
-      caret-color: #fff;
-      transition: background-color 9999s ease-in-out 0s;
-    }
-
-    #overlay .vp-btn-primary {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      margin: 26px 0 0;
-      padding: 13px;
-      font-size: 16px;
-      font-weight: 700;
-      font-family: inherit;
-      color: #fff;
-      background: #e50914;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-      animation: none;
-      text-shadow: none;
-      box-shadow: none;
-    }
-    #overlay .vp-btn-primary:hover { background: #f6121d; }
-    #overlay .vp-btn-primary:disabled { background: #5c5c5c; cursor: default; }
-
-    #overlay .vp-btn-ghost {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 10px;
-      padding: 11px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      color: #fff;
-      background: transparent;
-      border: 1px solid #737373;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      animation: none;
-      text-shadow: none;
-      box-shadow: none;
-    }
-    #overlay .vp-btn-ghost:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
-
-    .vp-opts {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
-      font-size: 13px;
-      color: #b3b3b3;
-    }
-    .vp-remember { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-    #overlay .vp-remember input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      margin: 0;
-      padding: 0;
-      display: inline-block;
-      border: none;
-      background: none;
-      border-radius: 0;
-      animation: none;
-      box-shadow: none;
-      accent-color: #737373;
-    }
-    #overlay .vp-link {
-      background: none;
-      border: none;
-      padding: 0;
-      width: auto;
-      color: #b3b3b3;
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-      animation: none;
-      text-shadow: none;
-      box-shadow: none;
-      text-decoration: none;
-    }
-    #overlay .vp-link:hover { text-decoration: underline; color: #fff; background: none; box-shadow: none; }
-
-    .vp-error {
-      display: none;
-      margin: 0 0 14px;
-      padding: 12px 14px;
-      background: #e87c03;
-      color: #fff;
-      font-size: 14px;
-      border-radius: 4px;
-      line-height: 1.4;
-    }
-    .vp-error.visible { display: block; }
-    .vp-note { font-size: 13px; color: #b3b3b3; margin: 10px 0 0; line-height: 1.5; }
-    .vp-note.ok { color: #6fbf4a; }
-
-    .vp-recover { margin-top: 14px; padding-top: 14px; border-top: 1px solid #333; }
-
-    .vp-switch { margin: 34px 0 0; color: #737373; font-size: 16px; }
-    #overlay .vp-link-strong {
-      background: none;
-      border: none;
-      padding: 0;
-      width: auto;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      animation: none;
-      text-shadow: none;
-      box-shadow: none;
-    }
-    #overlay .vp-link-strong:hover { text-decoration: underline; background: none; box-shadow: none; }
-
-    .vp-captcha { margin: 14px 0 0; color: #8c8c8c; font-size: 12.5px; line-height: 1.6; }
-    .vp-captcha .vp-link { font-size: 12.5px; color: #0071eb; }
-
-    @media (max-width: 600px) {
-      .vp-auth-top { padding: 16px 20px; }
-      .vp-logo { font-size: 30px; }
-      #auth-container {
-        padding: 36px 26px 28px;
-        margin: 0;
-        max-width: none;
-        min-height: calc(100vh - 62px);
-        border-radius: 0;
-        background: rgba(0, 0, 0, 0.88);
-      }
-      .vp-auth-bg { grid-template-columns: repeat(4, 1fr); }
-    }
 
     @keyframes flicker {
       0% {
@@ -442,9 +182,10 @@
     }
 
   </style>
+  <link rel="stylesheet" href="hidden_files/auth-cinematic.css">
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBGymYEny8_sW8LremajNvVrDzF2OvRqtk",
@@ -469,26 +210,61 @@
     const registerError = document.getElementById('register-error');
     const recoverBox = document.getElementById('recover-box');
     const recoverMsg = document.getElementById('recover-msg');
+    const rememberMe = document.getElementById('remember-me');
+    const strengthBox = document.querySelector('#register-form .vp-strength');
+    const strengthLabel = document.querySelector('#register-form .vp-strength-label');
 
     const showAuth = () => { overlay.classList.remove('vp-hidden'); document.body.style.overflow = 'hidden'; };
-    const hideAuth = () => { overlay.classList.add('vp-hidden'); document.body.style.overflow = ''; };
+    const hideAuth = () => { overlay.classList.add('vp-hidden'); document.body.style.overflow = ''; document.getElementById('login-password').value = ''; document.getElementById('register-password').value = ''; };
 
     const friendlyError = (error) => {
       switch (error && error.code) {
         case 'auth/invalid-email': return 'Escribe un correo electrónico válido.';
         case 'auth/user-not-found': return 'No encontramos una cuenta con ese correo electrónico.';
         case 'auth/wrong-password': return 'Contraseña incorrecta. Inténtalo de nuevo.';
-        case 'auth/invalid-credential': return 'El correo o la contraseña no son correctos.';
+        case 'auth/invalid-credential': return 'Correo o contraseña incorrectos. Inténtalo de nuevo.';
         case 'auth/email-already-in-use': return 'Este correo ya está registrado. Inicia sesión.';
         case 'auth/weak-password': return 'La contraseña debe tener al menos 6 caracteres.';
         case 'auth/too-many-requests': return 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.';
-        case 'auth/network-request-failed': return 'Error de red. Revisa tu conexión a internet.';
+        case 'auth/network-request-failed': return 'No pudimos conectar. Revisa tu internet e inténtalo de nuevo.';
+        case 'auth/user-disabled': return 'Esta cuenta está deshabilitada. Contacta a soporte.';
+        case 'auth/operation-not-allowed': return 'El registro con correo está deshabilitado. Contacta a soporte.';
+        case 'auth/invalid-api-key': return 'Error de configuración. Inténtalo más tarde.';
+        case 'auth/app-not-authorized': return 'Error de configuración. Inténtalo más tarde.';
         default: return 'Ocurrió un error. Inténtalo de nuevo.';
       }
     };
 
     const showError = (el, message) => { el.textContent = message; el.classList.add('visible'); };
     const clearError = (el) => { el.textContent = ''; el.classList.remove('visible'); };
+
+    /* Validación inline: pinta el campo (is-invalid/is-valid) y escribe el <p class="vp-hint"> */
+    const setFieldState = (inputId, valid, message) => {
+      const input = document.getElementById(inputId);
+      const field = input.closest('.vp-field');
+      const hint = field ? field.querySelector('.vp-hint') : null;
+      if (field) {
+        field.classList.toggle('is-invalid', !valid);
+        field.classList.toggle('is-valid', valid && input.value.trim().length > 0);
+      }
+      if (hint) { hint.textContent = valid ? '' : message; }
+    };
+    const clearFieldState = (inputId) => {
+      const input = document.getElementById(inputId);
+      const field = input.closest('.vp-field');
+      const hint = field ? field.querySelector('.vp-hint') : null;
+      if (field) { field.classList.remove('is-invalid'); field.classList.remove('is-valid'); }
+      if (hint) { hint.textContent = ''; }
+    };
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValidEmail = (email) => EMAIL_RE.test(email);
+
+    /* Transición de vista: fade + desplazamiento al mostrar un formulario */
+    const enterView = (el) => {
+      el.classList.remove('vp-view-enter');
+      void el.offsetWidth; /* reflow para relanzar la animación */
+      el.classList.add('vp-view-enter');
+    };
 
     const showLogin = () => {
       loginBox.style.display = 'block';
@@ -501,6 +277,7 @@
       recoverBox.hidden = true;
       recoverMsg.textContent = '';
       recoverMsg.classList.remove('ok');
+      enterView(loginBox);
     };
 
     const showRegister = () => {
@@ -511,6 +288,7 @@
       switchText.textContent = '¿Ya tienes cuenta?';
       switchBtn.textContent = 'Inicia sesión.';
       clearError(registerError);
+      enterView(registerBox);
     };
 
     let registering = false;
@@ -523,9 +301,10 @@
       if (user) { hideAuth(); } else { showAuth(); }
     });
 
-    const setLoading = (btn, loading, label) => {
+    /* Estado de carga: clase .is-loading (spinner CSS) + botón deshabilitado */
+    const setLoading = (btn, loading) => {
       btn.disabled = loading;
-      btn.textContent = loading ? 'Cargando...' : label;
+      btn.classList.toggle('is-loading', loading);
     };
 
     document.getElementById('login-button').addEventListener('click', () => {
@@ -533,12 +312,22 @@
       const password = document.getElementById('login-password').value;
       const btn = document.getElementById('login-button');
       clearError(loginError);
-      if (!email || !password) { showError(loginError, 'Escribe tu correo y tu contraseña.'); return; }
+      clearFieldState('login-email');
+      clearFieldState('login-password');
+      let ok = true;
+      if (!email) { setFieldState('login-email', false, 'Escribe tu correo electrónico.'); ok = false; }
+      else if (!isValidEmail(email)) { setFieldState('login-email', false, 'Ese correo no parece válido. Revísalo e inténtalo de nuevo.'); ok = false; }
+      else { setFieldState('login-email', true, ''); }
+      if (!password) { setFieldState('login-password', false, 'Escribe tu contraseña.'); ok = false; }
+      else { setFieldState('login-password', true, ''); }
+      if (!ok) return;
       setLoading(btn, true);
-      signInWithEmailAndPassword(auth, email, password)
+      /* "Recuérdame": persistencia local (sesión recordada) o solo de la sesión actual */
+      setPersistence(auth, rememberMe.checked ? browserLocalPersistence : browserSessionPersistence)
+        .then(() => signInWithEmailAndPassword(auth, email, password))
         .then(() => { hideAuth(); })
         .catch((error) => { showError(loginError, friendlyError(error)); })
-        .finally(() => { setLoading(btn, false, 'Iniciar sesión'); });
+        .finally(() => { setLoading(btn, false); });
     });
 
     document.getElementById('register-button').addEventListener('click', () => {
@@ -546,38 +335,83 @@
       const password = document.getElementById('register-password').value;
       const btn = document.getElementById('register-button');
       clearError(registerError);
-      if (!email || !password) { showError(registerError, 'Escribe un correo y una contraseña.'); return; }
-      if (password.length < 6) { showError(registerError, 'La contraseña debe tener al menos 6 caracteres.'); return; }
+      clearFieldState('register-email');
+      clearFieldState('register-password');
+      let ok = true;
+      if (!email) { setFieldState('register-email', false, 'Escribe tu correo electrónico.'); ok = false; }
+      else if (!isValidEmail(email)) { setFieldState('register-email', false, 'Ese correo no parece válido. Revísalo e inténtalo de nuevo.'); ok = false; }
+      else { setFieldState('register-email', true, ''); }
+      if (!password) { setFieldState('register-password', false, 'Escribe tu contraseña.'); ok = false; }
+      else if (password.length < 6) { setFieldState('register-password', false, 'La contraseña debe tener al menos 6 caracteres.'); ok = false; }
+      else { setFieldState('register-password', true, ''); }
+      if (!ok) return;
       setLoading(btn, true);
       createUserWithEmailAndPassword(auth, email, password)
+        .then(() => sendEmailVerification(auth.currentUser))
         .then(() => { hideAuth(); })
         .catch((error) => { showError(registerError, friendlyError(error)); })
-        .finally(() => { setLoading(btn, false, 'Registrarse'); });
+        .finally(() => { setLoading(btn, false); });
     });
 
     document.getElementById('forgot-password').addEventListener('click', () => {
       recoverBox.hidden = !recoverBox.hidden;
       recoverMsg.textContent = '';
       recoverMsg.classList.remove('ok');
+      if (!recoverBox.hidden) { enterView(recoverBox); }
     });
 
     document.getElementById('recover-button').addEventListener('click', () => {
       const email = document.getElementById('recover-email').value.trim();
+      const btn = document.getElementById('recover-button');
       recoverMsg.classList.remove('ok');
-      if (!email) { recoverMsg.textContent = 'Escribe tu correo electrónico.'; return; }
+      clearFieldState('recover-email');
+      if (!email) { setFieldState('recover-email', false, 'Escribe tu correo electrónico.'); return; }
+      if (!isValidEmail(email)) { setFieldState('recover-email', false, 'Ese correo no parece válido. Revísalo e inténtalo de nuevo.'); return; }
+      setFieldState('recover-email', true, '');
+      setLoading(btn, true);
       sendPasswordResetEmail(auth, email)
         .then(() => {
           recoverMsg.textContent = 'Listo. Revisa tu correo, te enviamos el enlace de recuperación.';
           recoverMsg.classList.add('ok');
         })
-        .catch((error) => { recoverMsg.textContent = friendlyError(error); });
+        .catch((error) => { recoverMsg.textContent = friendlyError(error); })
+        .finally(() => { setLoading(btn, false); });
     });
 
-    const enterPairs = [['login-email', 'login-button'], ['login-password', 'login-button'], ['register-email', 'register-button'], ['register-password', 'register-button']];
+    const enterPairs = [['login-email', 'login-button'], ['login-password', 'login-button'], ['register-email', 'register-button'], ['register-password', 'register-button'], ['recover-email', 'recover-button']];
     enterPairs.forEach((pair) => {
       document.getElementById(pair[0]).addEventListener('keydown', (e) => {
         if (e.key === 'Enter') { document.getElementById(pair[1]).click(); }
       });
+    });
+
+    /* Ojo mostrar/ocultar contraseña (el ojo está dibujado en CSS; el JS alterna type + estado) */
+    document.querySelectorAll('#overlay .vp-pw-toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const input = toggle.closest('.vp-field').querySelector('input');
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        toggle.classList.toggle('is-off', !show);
+        toggle.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      });
+    });
+
+    /* Medidor de fuerza: 0 vacío, 1 débil, 2 aceptable, 3 buena, 4 fuerte */
+    const STRENGTH_LABELS = ['', 'Contraseña débil', 'Aceptable', 'Buena', 'Fuerte'];
+    const strengthInput = document.getElementById('register-password');
+    strengthInput.addEventListener('input', () => {
+      const pw = strengthInput.value;
+      let level = 0;
+      if (pw.length > 0) {
+        level = 1;
+        if (pw.length >= 8) level++;
+        if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) level++;
+        if (/\d/.test(pw)) level++;
+        if (/[^A-Za-z0-9]/.test(pw) || pw.length >= 12) level++;
+        level = Math.min(level, 4);
+      }
+      strengthBox.setAttribute('data-level', String(level));
+      strengthLabel.textContent = level > 0 ? STRENGTH_LABELS[level] : 'Usa 8+ caracteres con letras y números.';
     });
 
     showLogin();
@@ -607,10 +441,13 @@
 
       <div id="login-form">
         <div class="vp-field">
-          <input type="email" id="login-email" placeholder="Correo electr&oacute;nico" autocomplete="email">
+          <input type="email" id="login-email" placeholder="Correo electr&oacute;nico" autocomplete="email" maxlength="254">
+          <p class="vp-hint"></p>
         </div>
-        <div class="vp-field">
-          <input type="password" id="login-password" placeholder="Contrase&ntilde;a" autocomplete="current-password">
+        <div class="vp-field has-toggle">
+          <input type="password" id="login-password" placeholder="Contrase&ntilde;a" autocomplete="current-password" maxlength="128">
+          <button type="button" class="vp-pw-toggle is-off" aria-label="Mostrar contrase&ntilde;a"><i></i></button>
+          <p class="vp-hint"></p>
         </div>
         <p class="vp-error" id="login-error" role="alert"></p>
         <button type="button" id="login-button" class="vp-btn-primary">Iniciar sesi&oacute;n</button>
@@ -620,26 +457,33 @@
         </div>
         <div class="vp-recover" id="recover-box" hidden>
           <div class="vp-field">
-            <input type="email" id="recover-email" placeholder="Correo electr&oacute;nico para recuperar">
+            <input type="email" id="recover-email" placeholder="Correo electr&oacute;nico para recuperar" maxlength="254">
+            <p class="vp-hint"></p>
           </div>
           <button type="button" id="recover-button" class="vp-btn-ghost">Enviar enlace de recuperaci&oacute;n</button>
-          <p class="vp-note" id="recover-msg"></p>
+          <p class="vp-note" id="recover-msg" role="alert"></p>
         </div>
       </div>
 
       <div id="register-form" style="display:none;">
         <div class="vp-field">
-          <input type="email" id="register-email" placeholder="Correo electr&oacute;nico" autocomplete="email">
+          <input type="email" id="register-email" placeholder="Correo electr&oacute;nico" autocomplete="email" maxlength="254">
+          <p class="vp-hint"></p>
         </div>
-        <div class="vp-field">
-          <input type="password" id="register-password" placeholder="Contrase&ntilde;a (m&iacute;nimo 6 caracteres)" autocomplete="new-password">
+        <div class="vp-field has-toggle">
+          <input type="password" id="register-password" placeholder="Contrase&ntilde;a (m&iacute;nimo 6 caracteres)" autocomplete="new-password" maxlength="128">
+          <button type="button" class="vp-pw-toggle is-off" aria-label="Mostrar contrase&ntilde;a"><i></i></button>
+          <p class="vp-hint"></p>
+        </div>
+        <div class="vp-strength" data-level="0">
+          <div class="vp-strength-bar"><span></span><span></span><span></span><span></span></div>
+          <p class="vp-strength-label">Usa 8+ caracteres con letras y n&uacute;meros.</p>
         </div>
         <p class="vp-error" id="register-error" role="alert"></p>
         <button type="button" id="register-button" class="vp-btn-primary">Registrarse</button>
       </div>
 
       <p class="vp-switch"><span id="auth-switch-text">&iquest;Primera vez en VetPlex?</span> <button type="button" id="switch-auth" class="vp-link-strong">Reg&iacute;strate ahora.</button></p>
-      <p class="vp-captcha">Esta p&aacute;gina est&aacute; protegida por Google reCAPTCHA para comprobar que no eres un robot. <button type="button" class="vp-link">M&aacute;s informaci&oacute;n.</button></p>
     </div>
     </div>
   </div>
@@ -887,7 +731,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VetPlex</title>
-  <link rel="stylesheet" href="styles.css">
   <style>
     body {
       background-color: #141414;
@@ -1536,7 +1379,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VetPlex - Publicar Anime</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
