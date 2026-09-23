@@ -383,9 +383,21 @@
       if (recoverBox.hidden) { showRecover(); } else { hideRecover(); }
     });
     document.getElementById('recover-back').addEventListener('click', hideRecover);
-    document.getElementById('search-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); searchAnime(); }
-    });
+    /* Enter en el buscador: se enlaza cuando el DOM está listo (el input vive más abajo en el documento) */
+    const bindSearchEnter = () => {
+      const searchInputEl = document.getElementById('search-input');
+      if (searchInputEl && !searchInputEl.dataset.enterBound) {
+        searchInputEl.dataset.enterBound = '1';
+        searchInputEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); searchAnime(); }
+        });
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bindSearchEnter);
+    } else {
+      bindSearchEnter();
+    }
 
     document.getElementById('recover-button').addEventListener('click', () => {
       const email = document.getElementById('recover-email').value.trim();
