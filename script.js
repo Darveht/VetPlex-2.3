@@ -48,7 +48,7 @@ const animes = {
   "imageUrl": "https://preview.redd.it/blue-giant-new-key-visual-v0-vko20diq5fta1.jpg?auto=webp&s=e7cea7014014a6990305ceacb9253d5a9f149643"
 },
 
-        { title: 'Pseudo Harem', year: 2024,description: 'La historia sigue a Eiji Kitahama, un estudiante de segundo año de secundaria que sueña con ser popular y tener un harem de chicas que lo adoren. Su compañera de club de teatro, Rin Nanakura, usa sus habilidades de actuación para interpretar a varias chicas que forman parte de este harem ficticio, todo mientras oculta sus verdaderos sentimientos por Eiji', imageUrl: 'https://m.media-amazon.com/images/M/MV5BZWQzMDBlOGItNGVjOC00YjUzLWI5MWMtMThlM2MwZmU2ZTRmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg '},
+        { title: 'Pseudo Harem', year: 2024,description: 'La historia sigue a Eiji Kitahama, un estudiante de segundo año de secundaria que sueña con ser popular y tener un harem de chicas que lo adoren. Su compañera de club de teatro, Rin Nanakura, usa sus habilidades de actuación para interpretar a varias chicas que forman parte de este harem ficticio, todo mientras oculta sus verdaderos sentimientos por Eiji', imageUrl: 'https://m.media-amazon.com/images/M/MV5BZWQzMDBlOGItNGVjOC00YjUzLWI5MWMtMThlM2MwZmU2ZTRmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'},
          
         { title: 'Shikanoko Nokonoko Koshitantan', year: 2024,description: 'Torako Koshi rescata a una extraña niña-ciervo que cuelga de unos cables eléctricos de camino a la escuela. Luego, la niña pronto se transfiere a su escuela, se presenta como Noko Shikanoko y comienza a arrastrar a Torako a sus extrañas travesuras.', imageUrl: 'https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/6533e54a54f7a69c806920607bc8238e.jpg' },
         { title: 'Fairy Tail: 100-nen Quest', year: 2024, description: 'Fairy Tail, que trata sobre Natsu Dragneel y su equipo del gremio que intentan completar una misión de un siglo de duración que nadie ha logrado terminar', imageUrl: 'https://a.storyblok.com/f/178900/1984x2805/ea41558285/fairy-tail-100-years-quest-main-visual.jpg/m/filters:quality(95)format(webp)' },
@@ -257,11 +257,12 @@ function closeModal() {
 }
 
 function vote(type) {
-    const notification = document.getElementById('notifications');
-    notification.innerText = type === 'like' ? '¡Gracias por tu voto positivo!' : '¡Gracias por tu voto!';
-    notification.style.display = 'block';
+    const messageElement = document.getElementById('vote-message');
+    if (!messageElement) return;
+    messageElement.innerText = type === 'like' ? '¡Gracias por tu voto positivo!' : '¡Gracias por tu voto!';
+    messageElement.style.display = 'block';
     setTimeout(() => {
-        notification.style.display = 'none';
+        messageElement.style.display = 'none';
     }, 2000);
 }
 
@@ -289,61 +290,4 @@ function moveCarousel(carouselId, direction) {
         left: direction * 200, // Ajusta el número para cambiar la cantidad de desplazamiento
         behavior: 'smooth'
     });
-}
-
-
-
-// script.js
-document.addEventListener('DOMContentLoaded', () => {
-    const followButtons = document.querySelectorAll('.follow-btn');
-
-    followButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            if (button.textContent === 'Seguir') {
-                button.textContent = 'Siguiendo';
-                button.style.backgroundColor = '#b81d24';
-            } else {
-                button.textContent = 'Seguir';
-                button.style.backgroundColor = '#e50914';
-            }
-        });
-    });
-});
-
-
-
-
-
-
-// carousel.js
-
-// Variable para rastrear la posición actual del carrusel
-let currentScrollPosition = 0;
-const scrollAmount = 220; // Ajusta el valor según el tamaño del contenedor del episodio
-
-// Función para mover al episodio anterior en el carrusel
-function prevEpisode() {
-    const carousel = document.querySelector('.episodios-carousel');
-    currentScrollPosition -= scrollAmount;
-    carousel.scrollBy({
-        left: -scrollAmount,
-        behavior: 'smooth'
-    });
-}
-
-// Función para mover al siguiente episodio en el carrusel
-function nextEpisode() {
-    const carousel = document.querySelector('.episodios-carousel');
-    currentScrollPosition += scrollAmount;
-    carousel.scrollBy({
-        left: scrollAmount,
-        behavior: 'smooth'
-    });
-}
-
-// Función para reproducir el episodio en el iframe
-function playEpisode(element) {
-    const url = element.getAttribute('data-url');
-    const viewer = document.getElementById('episode-viewer');
-    viewer.src = url; // Actualiza el iframe con el URL del episodio
 }

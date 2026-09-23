@@ -520,21 +520,33 @@
     </div>
 
     <script>
-      // Mostrar y ocultar la pantalla de bloqueo de notificación
-      document.getElementById('shortcut').onclick = function() {
-        document.getElementById('notification-blocker').style.display = 'flex';
-      }
-      document.getElementById('accept-btn').onclick = function() {
-        document.getElementById('notification-blocker').style.display = 'none';
-      }
-      // Mostrar formulario de reporte al hacer clic en "Reportar Problema"
-      document.getElementById('report-btn').onclick = function() {
-        document.getElementById('report-form').style.display = 'block';
-      }
-      // Enviar el reporte y mostrar advertencia
-      document.getElementById('submit-report').onclick = function() {
-        document.getElementById('warning-message').style.display = 'block';
-      }
+      // Mostrar y ocultar la pantalla de bloqueo de notificación (todas las copias del bloque)
+      document.querySelectorAll('#shortcut').forEach(function(el) {
+        el.onclick = function() {
+          document.querySelectorAll('#notification-blocker').forEach(function(b) { b.style.display = 'flex'; });
+        };
+      });
+      document.querySelectorAll('#accept-btn').forEach(function(el) {
+        el.onclick = function() {
+          document.querySelectorAll('#notification-blocker').forEach(function(b) { b.style.display = 'none'; });
+        };
+      });
+      // Mostrar formulario de reporte al hacer clic en "Reportar Problema" (dentro de su propio bloque)
+      document.querySelectorAll('#report-btn').forEach(function(el) {
+        el.onclick = function() {
+          var block = el.closest('#notification-blocker');
+          var form = block ? block.querySelector('#report-form') : document.querySelector('#report-form');
+          if (form) form.style.display = 'block';
+        };
+      });
+      // Enviar el reporte y mostrar advertencia (dentro de su propio bloque)
+      document.querySelectorAll('#submit-report').forEach(function(el) {
+        el.onclick = function() {
+          var block = el.closest('#notification-blocker');
+          var warn = block ? block.querySelector('#warning-message') : document.querySelector('#warning-message');
+          if (warn) warn.style.display = 'block';
+        };
+      });
     </script>
   </body>
 
@@ -1558,7 +1570,7 @@
       });
       // Búsqueda de anime
       function searchAnime() {
-        const searchInput = document.getElementById('search').value.toLowerCase();
+        const searchInput = document.getElementById('search-input').value.toLowerCase();
         const animes = document.querySelectorAll('.anime-card');
         animes.forEach(anime => {
           const title = anime.querySelector('h3').textContent.toLowerCase();
@@ -1796,12 +1808,12 @@
       // Importar las funciones necesarias de Firebase
       import {
         initializeApp
-      } from "firebase/app";
+      } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
       import {
         getDatabase,
         ref,
         set
-      } from "firebase/database";
+      } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
       // Configuración de Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyBGymYEny8_sW8LremajNvVrDzF2OvRqtk",
@@ -1824,23 +1836,35 @@
           timestamp: new Date().toISOString()
         });
       }
-      // Mostrar y ocultar la pantalla de bloqueo de notificación
+      // Mostrar y ocultar la pantalla de bloqueo de notificación (todas las copias del bloque)
       document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('shortcut').onclick = function() {
-          document.getElementById('notification-blocker').style.display = 'flex';
-        }
-        document.getElementById('accept-btn').onclick = function() {
-          document.getElementById('notification-blocker').style.display = 'none';
-        }
-        document.getElementById('report-btn').onclick = function() {
-          document.getElementById('report-form').style.display = 'block';
-        }
-        // Enviar el reporte y mostrar advertencia
-        document.getElementById('submit-report').onclick = function() {
-          const problemType = document.getElementById('problem-type').value;
-          sendReport(problemType);
-          document.getElementById('warning-message').style.display = 'block';
-        }
+        document.querySelectorAll('#shortcut').forEach(function(el) {
+          el.onclick = function() {
+            document.querySelectorAll('#notification-blocker').forEach(function(b) { b.style.display = 'flex'; });
+          };
+        });
+        document.querySelectorAll('#accept-btn').forEach(function(el) {
+          el.onclick = function() {
+            document.querySelectorAll('#notification-blocker').forEach(function(b) { b.style.display = 'none'; });
+          };
+        });
+        document.querySelectorAll('#report-btn').forEach(function(el) {
+          el.onclick = function() {
+            var block = el.closest('#notification-blocker');
+            var form = block ? block.querySelector('#report-form') : document.querySelector('#report-form');
+            if (form) form.style.display = 'block';
+          };
+        });
+        // Enviar el reporte a Firebase y mostrar advertencia (dentro de su propio bloque)
+        document.querySelectorAll('#submit-report').forEach(function(el) {
+          el.onclick = function() {
+            var block = el.closest('#notification-blocker');
+            var typeSel = block ? block.querySelector('#problem-type') : document.querySelector('#problem-type');
+            var warn = block ? block.querySelector('#warning-message') : document.querySelector('#warning-message');
+            if (typeSel) sendReport(typeSel.value);
+            if (warn) warn.style.display = 'block';
+          };
+        });
       });
     </script>
   </head>
@@ -2416,7 +2440,7 @@
       const nextButton = document.querySelector('.scroll-button.next');
       const carousel = document.querySelector('.carousel');
       const modal = document.getElementById('anime-modal');
-      const modalTitle = document.getElementById('modal-title');
+      const modalTitle = document.querySelector('#anime-modal #modal-title');
       const modalDate = document.getElementById('modal-date');
       const modalRating = document.getElementById('modal-rating');
       const modalSynopsis = document.getElementById('modal-synopsis');
@@ -2637,11 +2661,11 @@
         <label for="animeImage">Foto del Anime:</label>
         <input type="file" id="animeImage" accept="image/*" required>
 
-        <label for="synopsis">Sinopsis:</label>
-        <textarea id="synopsis" rows="4" required></textarea>
+        <label for="publishSynopsis">Sinopsis:</label>
+        <textarea id="publishSynopsis" rows="4" required></textarea>
 
-        <label for="year">Año:</label>
-        <input type="number" id="year" required>
+        <label for="publishYear">Año:</label>
+        <input type="number" id="publishYear" required>
 
         <label for="rating">Valoración:</label>
         <select id="rating" required>
@@ -2688,8 +2712,8 @@
           const seasons = document.getElementById('seasons').value;
           const episodes = document.getElementById('episodes').value;
           const trailerURL = document.getElementById('trailerURL').value;
-          const synopsis = document.getElementById('synopsis').value;
-          const year = document.getElementById('year').value;
+          const synopsis = document.getElementById('publishSynopsis').value;
+          const year = document.getElementById('publishYear').value;
           const rating = document.getElementById('rating').value;
           const status = document.getElementById('status').value;
           // Obtener la imagen
@@ -2754,8 +2778,8 @@
           document.getElementById('seasons').value = card.querySelector('p:nth-of-type(2)').innerText.replace('Temporadas:', '').trim();
           document.getElementById('episodes').value = card.querySelector('p:nth-of-type(3)').innerText.replace('Episodios:', '').trim();
           document.getElementById('trailerURL').value = card.querySelector('.trailer-link').href;
-          document.getElementById('synopsis').value = card.querySelector('p:nth-of-type(6)').innerText.replace('Sinopsis:', '').trim();
-          document.getElementById('year').value = card.querySelector('h3').innerText.split('(')[1].split(')')[0].trim(); // Extraer el año
+          document.getElementById('publishSynopsis').value = card.querySelector('p:nth-of-type(6)').innerText.replace('Sinopsis:', '').trim();
+          document.getElementById('publishYear').value = card.querySelector('h3').innerText.split('(')[1].split(')')[0].trim(); // Extraer el año
           document.getElementById('rating').value = card.querySelector('p:nth-of-type(4)').innerText.replace('Valoración:', '').trim().split(' ')[0]; // Valoración
           document.getElementById('status').value = card.querySelector('p:nth-of-type(5)').innerText.replace('Estado:', '').trim().toLowerCase().replace(' ', '_'); // Estado
           publishSection.style.display = 'block'; // Mostrar la sección de publicación
@@ -2896,8 +2920,8 @@
 
       <form id="comicForm">
         <div class="comic-form-group">
-          <label for="title">Título del cómic:</label>
-          <input type="text" id="title" required>
+          <label for="comicTitle">Título del cómic:</label>
+          <input type="text" id="comicTitle" required>
         </div>
 
         <div class="comic-form-group">
@@ -2906,8 +2930,8 @@
         </div>
 
         <div class="comic-form-group">
-          <label for="year">Año de publicación:</label>
-          <input type="number" id="year" min="1900" max="2024" required>
+          <label for="comicYear">Año de publicación:</label>
+          <input type="number" id="comicYear" min="1900" max="2024" required>
         </div>
 
         <div class="comic-form-group">
@@ -2916,8 +2940,8 @@
         </div>
 
         <div class="comic-form-group">
-          <label for="synopsis">Sinopsis:</label>
-          <textarea id="synopsis" rows="5" required></textarea>
+          <label for="comicSynopsis">Sinopsis:</label>
+          <textarea id="comicSynopsis" rows="5" required></textarea>
         </div>
 
         <div class="comic-form-group">
@@ -2989,11 +3013,11 @@
         document.getElementById('comicForm').style.display = 'none';
         document.getElementById('comicPreview').style.display = 'block';
         // Obtener los valores ingresados
-        const title = document.getElementById('title').value;
+        const title = document.getElementById('comicTitle').value;
         const author = document.getElementById('author').value;
-        const year = document.getElementById('year').value;
+        const year = document.getElementById('comicYear').value;
         const pages = document.getElementById('pages').value;
-        const synopsis = document.getElementById('synopsis').value;
+        const synopsis = document.getElementById('comicSynopsis').value;
         const coverFile = document.getElementById('cover').files[0];
         // Mostrar vista previa de la portada
         const previewCover = document.getElementById('previewCover');
@@ -3001,7 +3025,7 @@
         reader.onload = function(e) {
           previewCover.innerHTML = `<img src="${e.target.result}" alt="Portada del cómic">`;
         };
-        reader.readAsDataURL(coverFile);
+        if (coverFile) { reader.readAsDataURL(coverFile); } else { previewCover.innerHTML = '<p>Sin portada</p>'; }
         // Mostrar detalles del cómic
         const previewDetails = document.getElementById('previewDetails');
         previewDetails.innerHTML = `
@@ -3031,7 +3055,7 @@
         document.getElementById('currentChapterNumber').textContent = currentChapter + 1;
         const chapterImagesContainer = document.getElementById('chapterImages');
         chapterImagesContainer.innerHTML = ''; // Limpiar imágenes anteriores
-        chapterImages[currentChapter].forEach(imgSrc => {
+        (chapterImages[currentChapter] || []).forEach(imgSrc => {
           const img = document.createElement('img');
           img.src = imgSrc;
           chapterImagesContainer.appendChild(img);
@@ -3054,7 +3078,7 @@
 <!-- partial -->
   <script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js'></script>
 <script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js'></script>
-<script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js%0A'></script><script  src="./script.js"></script>
+<script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js'></script><script  src="./script.js"></script>
 
 </body>
 </html>
