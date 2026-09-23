@@ -30,18 +30,20 @@
     #overlay {
       position: fixed;
       inset: 0;
-      z-index: 999;
+      z-index: 10000;
       display: flex;
       flex-direction: column;
       font-family: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, sans-serif;
       background: #000;
-      overflow-y: auto;
+      overflow: hidden;
       -webkit-font-smoothing: antialiased;
     }
     #overlay.vp-hidden { display: none; }
 
+    /* El fondo queda anclado al overlay (que nunca hace scroll); el contenido
+       hace scroll en .vp-auth-scroll. Asi el fondo no se mueve "solo" en iOS. */
     .vp-auth-bg {
-      position: fixed;
+      position: absolute;
       inset: 0;
       display: grid;
       grid-template-columns: repeat(8, 1fr);
@@ -57,11 +59,23 @@
       transform: scale(1.08);
     }
     .vp-auth-shade {
-      position: fixed;
+      position: absolute;
       inset: 0;
       background:
         radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.78) 100%),
         linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.75) 100%);
+    }
+
+    /* Contenedor con scroll: solo el contenido se mueve, el fondo queda fijo */
+    .vp-auth-scroll {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
     }
 
     .vp-auth-top {
@@ -443,8 +457,8 @@
     const recoverBox = document.getElementById('recover-box');
     const recoverMsg = document.getElementById('recover-msg');
 
-    const showAuth = () => overlay.classList.remove('vp-hidden');
-    const hideAuth = () => overlay.classList.add('vp-hidden');
+    const showAuth = () => { overlay.classList.remove('vp-hidden'); document.body.style.overflow = 'hidden'; };
+    const hideAuth = () => { overlay.classList.add('vp-hidden'); document.body.style.overflow = ''; };
 
     const friendlyError = (error) => {
       switch (error && error.code) {
@@ -560,16 +574,17 @@
 <body>
   <div id="overlay">
     <div class="vp-auth-bg" aria-hidden="true">
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/01ec367b44f0a568430a957e042639af.jpg" alt="" loading="lazy">
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/0a34f193aa46a27cd75f5ee553834c41.jpg" alt="" loading="lazy">
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/18638d44e180fd1b51870106b88e46e4.jpg" alt="" loading="lazy">
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/3b70d9f3c112faa30940bcc26f1cff98.jpg" alt="" loading="lazy">
-      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/6533e54a54f7a69c806920607bc8238e.jpg" alt="" loading="lazy">
-      <img src="https://images.justwatch.com/poster/261483319/s718/boku-no-hero-academy.jpg" alt="" loading="lazy">
-      <img src="https://m.media-amazon.com/images/M/MV5BNzEzZjljMzAtNjJmMi00MTg3LTg1MDEtYWRiZWE4MjNlZTZlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="" loading="lazy">
-      <img src="https://m.media-amazon.com/images/M/MV5BOTBhOTlkNDctMDg1Zi00MGViLWJhMTUtMTU1OWEyYTUzZjdhXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_FMjpg_UX1000_.jpg" alt="" loading="lazy">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/01ec367b44f0a568430a957e042639af.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/0a34f193aa46a27cd75f5ee553834c41.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/18638d44e180fd1b51870106b88e46e4.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/3b70d9f3c112faa30940bcc26f1cff98.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=480,height=720/catalog/crunchyroll/6533e54a54f7a69c806920607bc8238e.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://images.justwatch.com/poster/261483319/s718/boku-no-hero-academy.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://m.media-amazon.com/images/M/MV5BNzEzZjljMzAtNjJmMi00MTg3LTg1MDEtYWRiZWE4MjNlZTZlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="" loading="eager" fetchpriority="high">
+      <img src="https://m.media-amazon.com/images/M/MV5BOTBhOTlkNDctMDg1Zi00MGViLWJhMTUtMTU1OWEyYTUzZjdhXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_FMjpg_UX1000_.jpg" alt="" loading="eager" fetchpriority="high">
       <div class="vp-auth-shade"></div>
     </div>
+    <div class="vp-auth-scroll">
     <header class="vp-auth-top">
       <span class="vp-logo">VETPLEX</span>
     </header>
@@ -612,6 +627,7 @@
 
       <p class="vp-switch"><span id="auth-switch-text">&iquest;Primera vez en VetPlex?</span> <button type="button" id="switch-auth" class="vp-link-strong">Reg&iacute;strate ahora.</button></p>
       <p class="vp-captcha">Esta p&aacute;gina est&aacute; protegida por Google reCAPTCHA para comprobar que no eres un robot. <button type="button" class="vp-link">M&aacute;s informaci&oacute;n.</button></p>
+    </div>
     </div>
   </div>
 
