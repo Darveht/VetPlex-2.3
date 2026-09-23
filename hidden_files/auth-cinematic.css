@@ -237,16 +237,38 @@ body.vp-no-scroll { overflow: hidden !important; }
 }
 
 /* El gestor de contraseñas del navegador pinta los campos autocompletados
-   con sus propios colores: forzar el estilo oscuro VetPlex. FIX conservado. */
+   con sus propios colores: forzar el estilo oscuro VetPlex.
+   FIX 2026-09-23: el !important es obligatorio porque la hoja UA de Chrome
+   aplica su fondo de autofill con prioridad; sin el, el campo quedaba como
+   una caja negra total. Sombra de 1000px para cubrir cualquier alto. */
 #overlay .vp-field input:-webkit-autofill,
 #overlay .vp-field input:-webkit-autofill:hover,
 #overlay .vp-field input:-webkit-autofill:focus,
 #overlay .vp-field input:-webkit-autofill:active {
-  -webkit-text-fill-color: #fff;
-  -webkit-box-shadow: 0 0 0 80px var(--vp-auth-field) inset;
-  box-shadow: 0 0 0 80px var(--vp-auth-field) inset;
+  -webkit-text-fill-color: #fff !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--vp-auth-field) inset !important;
+  box-shadow: 0 0 0 1000px var(--vp-auth-field) inset !important;
+  background-color: var(--vp-auth-field) !important;
   caret-color: #fff;
   transition: background-color 9999s ease-in-out 0s;
+}
+
+/* ---- Recuperación: estado visual propio (título + subtítulo + regreso) ---- */
+.vp-recover-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 2px 0 6px;
+  text-align: center;
+}
+.vp-recover-sub {
+  font-size: 14px;
+  color: var(--vp-auth-muted);
+  margin: 0 0 14px;
+  text-align: center;
+}
+#overlay .vp-recover .vp-back {
+  margin-top: 12px;
 }
 
 /* ---- Validación inline (mensajes en español, los pone el JS) ---- */

@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - VetPlex Platform Streaming</title>
+  <title>VetPlex — Plataforma de anime</title>
   
 
 </head>
@@ -111,11 +111,14 @@
 
 
     #bats {
-      position: absolute;
+      /* fixed (no absolute): el translateX(±100vw) de la animación ya no
+         expande el scroll horizontal del documento en móvil */
+      position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
+      overflow: hidden;
       pointer-events: none;
       z-index: -1;
       animation: batsFly 8s infinite linear;
@@ -355,12 +358,27 @@
         .finally(() => { setLoading(btn, false); });
     });
 
-    document.getElementById('forgot-password').addEventListener('click', () => {
-      recoverBox.hidden = !recoverBox.hidden;
+    /* Recuperación: estado visual propio (título + subtítulo + regreso).
+       La lógica Firebase (sendPasswordResetEmail) no se toca. */
+    const showRecover = () => {
+      recoverBox.hidden = false;
+      authTitle.textContent = 'Recupera tu contraseña';
+      authSub.textContent = 'Te enviamos un enlace para restablecerla.';
       recoverMsg.textContent = '';
       recoverMsg.classList.remove('ok');
-      if (!recoverBox.hidden) { enterView(recoverBox); }
+      enterView(recoverBox);
+    };
+    const hideRecover = () => {
+      recoverBox.hidden = true;
+      authTitle.textContent = 'Iniciar sesión';
+      authSub.textContent = 'Tus animes favoritos te esperan.';
+      recoverMsg.textContent = '';
+      recoverMsg.classList.remove('ok');
+    };
+    document.getElementById('forgot-password').addEventListener('click', () => {
+      if (recoverBox.hidden) { showRecover(); } else { hideRecover(); }
     });
+    document.getElementById('recover-back').addEventListener('click', hideRecover);
 
     document.getElementById('recover-button').addEventListener('click', () => {
       const email = document.getElementById('recover-email').value.trim();
@@ -459,12 +477,15 @@
           <button type="button" id="forgot-password" class="vp-link">&iquest;Necesitas ayuda?</button>
         </div>
         <div class="vp-recover" id="recover-box" hidden>
+          <h2 class="vp-recover-title">Recupera tu contrase&ntilde;a</h2>
+          <p class="vp-recover-sub">Escribe tu correo y te enviamos un enlace para restablecerla.</p>
           <div class="vp-field">
             <input type="email" id="recover-email" placeholder="Correo electr&oacute;nico para recuperar" maxlength="254">
             <p class="vp-hint"></p>
           </div>
           <button type="button" id="recover-button" class="vp-btn-ghost">Enviar enlace de recuperaci&oacute;n</button>
           <p class="vp-note" id="recover-msg" role="alert"></p>
+          <button type="button" id="recover-back" class="vp-link vp-back">&larr; Volver a iniciar sesi&oacute;n</button>
         </div>
       </div>
 
@@ -508,7 +529,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - VetPlex Platform Streaming</title>
+  <title>VetPlex — Plataforma de anime</title>
 
 </head>
 
@@ -1784,7 +1805,9 @@
 
       /* Estilo de las brujas */
       .bruja {
-        position: absolute;
+        /* fixed (no absolute): la animación las lleva hasta left:100% y con
+           absolute expandían el scroll horizontal del documento en móvil */
+        position: fixed;
         width: 80px;
         /* Tamaño de las brujas */
         z-index: 1000;
@@ -3088,6 +3111,75 @@
       .chapter-navigation button:disabled {
         background-color: #555;
         cursor: not-allowed;
+      }
+    </style>
+    <style>
+      /* ============================================================
+         FIX iPhone 2026-09-23: desbordamiento horizontal y escala móvil
+         (lote correctivo, no rediseño). Este bloque va ÚLTIMO para ganar
+         los empates de especificidad contra las reglas globales heredadas
+         (input/button con width:100% + padding sin box-sizing).
+         Causas raíz confirmadas:
+         - Sin box-sizing: border-box, todo width:100% + padding se salía.
+         - .search-input heredaba box-shadow/text-shadow rojos y width:300px
+           (input[type="text"] le ganaba por especificidad) -> buscador
+           gigante con brillo rojo que empujaba el header fuera del viewport.
+         - button { width:100% } global -> botones del banner +40px.
+         - .modal-content 440px renderizados > 390px del iPhone.
+         - Cero @media queries: tarjetas de 200px y banner de 400px se
+           veían enormes en el teléfono.
+         ============================================================ */
+      *, *::before, *::after { box-sizing: border-box; }
+
+      /* Buscador del header: flexible, sin estilos rojos heredados */
+      header { gap: 10px; }
+      header .logo { flex-shrink: 0; }
+      .search-bar { flex: 1 1 auto; min-width: 0; max-width: 420px; }
+      .search-bar .search-input {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        margin: 0 8px 0 0;
+        padding: 8px 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: none;
+        text-shadow: none;
+        background-color: #1c1c1c;
+        color: #f5f5f5;
+      }
+      /* Si el icono no carga, su alt no debe derramarse fuera de sus 30px */
+      .search-bar .search-icon {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      /* Botones del banner: no heredan el width:100% global */
+      .banner-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+      .banner .banner-button { width: auto; flex: 0 1 auto; }
+
+      /* Modal: que quepa en pantallas de 390px */
+      .modal-content { width: min(400px, calc(100% - 32px)); }
+
+      /* Capa responsive móvil */
+      @media (max-width: 640px) {
+        header { padding: 10px 12px; }
+        .logo { font-size: 20px; }
+        .banner { height: 260px; }
+        .banner-content { left: 16px; right: 16px; bottom: 16px; }
+        .banner-title { font-size: 22px; }
+        .banner-description { font-size: 14px; margin: 8px 0; }
+        .banner .banner-button { padding: 8px 14px; font-size: 14px; }
+        .section-title { font-size: 20px; margin: 14px 0; }
+        .section-title h2 { font-size: 20px; }
+        .carousel { gap: 8px; padding: 8px; }
+        .carousel-item { min-width: 140px; max-width: 140px; }
+        .carousel-container { margin: 12px; }
       }
     </style>
   </head>
