@@ -110,65 +110,6 @@
     }
 
 
-    #bats {
-      /* Capa fija a pantalla completa: ella NO se anima. Un translateX(±100vw)
-         aplicado a un elemento fixed sí expande el scroll horizontal del
-         documento (comprobado en QA). La animación vive en cada .bat, que
-         vuela en formación dentro de la capa con overflow:hidden. */
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    @keyframes batsFly {
-      from {
-        transform: translateX(100vw);
-      }
-      to {
-        transform: translateX(-100vw);
-      }
-    }
-
-    .bat {
-      position: absolute;
-      top: -100px;
-      width: 80px;
-      height: auto;
-      z-index: -1;
-      /* Cada murciélago vuela en formación: mismo timing que la capa anterior,
-         pero el transform en los hijos no expande el scroll del documento. */
-      animation: batsFly 8s infinite linear;
-    }
-
-    .bat:nth-child(1) {
-      top: 10%;
-      left: 80%;
-    }
-
-    .bat:nth-child(2) {
-      top: 20%;
-      left: 60%;
-    }
-
-    .bat:nth-child(3) {
-      top: 30%;
-      left: 40%;
-    }
-
-    .bat:nth-child(4) {
-      top: 50%;
-      left: 20%;
-    }
-
-    .bat:nth-child(5) {
-      top: 70%;
-      left: 10%;
-    }
 
     /* Animación de letras volando y desintegrándose */
     @keyframes textFlyApart {
@@ -531,13 +472,6 @@
     </div>
   </div>
 
-  <div id="bats">
-    <img src="bat.png" alt="Bat" class="bat">
-    <img src="bat.png" alt="Bat" class="bat">
-    <img src="bat.png" alt="Bat" class="bat">
-    <img src="bat.png" alt="Bat" class="bat">
-    <img src="bat.png" alt="Bat" class="bat">
-  </div>
 </body>
 
 </html>
@@ -1812,88 +1746,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animación de Brujas de Halloween</title>
-    <style>
-      body {
-        font-family: 'Arial', sans-serif;
-        background-color: #1c1c1c;
-        /* Fondo oscuro */
-        margin: 0;
-        padding: 0;
-        overflow-y: auto;
-        /* Permitir desplazamiento vertical */
-        position: relative;
-        /* Posición relativa para las brujas */
-        height: 200vh;
-        /* Aumentar la altura para permitir más desplazamiento */
-      }
-
-      /* Estilo de las brujas */
-      .bruja {
-        /* fixed anclada a la izquierda: el vuelo se anima con transform.
-           Los keyframes originales usaban left:100% y eso expandía el scroll
-           horizontal del documento (comprobado en QA). */
-        position: fixed;
-        top: -10%;
-        left: 0;
-        width: 80px;
-        /* Tamaño de las brujas */
-        z-index: 1000;
-        /* Asegura que esté encima de otros elementos */
-      }
-
-      /* Animaciones de las brujas */
-      @keyframes volar1 {
-        0% {
-          transform: translate(0, 0);
-          /* Comienza fuera de la pantalla por la parte superior */
-        }
-
-        50% {
-          transform: translate(40vw, 50vh);
-          /* Vuela hacia abajo y a la derecha */
-        }
-
-        100% {
-          transform: translate(80vw, 0);
-          /* Regresa arriba y sale por la derecha */
-        }
-      }
-
-      @keyframes volar2 {
-        0% {
-          transform: translate(50vw, 0);
-          /* Comienza fuera de la pantalla por la parte superior, en el centro */
-        }
-
-        50% {
-          transform: translate(10vw, 30vh);
-          /* Vuela un poco hacia abajo y a la izquierda */
-        }
-
-        100% {
-          transform: translate(100vw, 0);
-          /* Regresa arriba y sale por la derecha */
-        }
-      }
-
-      /* Aplicar las animaciones */
-      .bruja1 {
-        animation: volar1 10s linear infinite;
-        /* Animación para la primera bruja */
-      }
-
-      .bruja2 {
-        animation: volar2 8s linear infinite;
-        /* Animación para la segunda bruja */
-      }
-    </style>
-  </head>
+      </head>
 
   <body>
 
-    <!-- Brujas volando -->
-    <img src="https://images.vexels.com/content/180552/preview/flying-witch-cartoon-1c7731.png" class="bruja bruja1" alt="Bruja volando 1">
-    <img src="https://www.pngarts.com/files/17/Halloween-Girl-Witch-PNG-Image-HQ.png" class="bruja bruja2" alt="Bruja volando 2">
 
   </body>
 
