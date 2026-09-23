@@ -3175,6 +3175,12 @@
         .carousel { gap: 8px; padding: 8px; }
         .carousel-item { min-width: 140px; max-width: 140px; }
         .carousel-container { margin: 12px; width: auto; max-width: 100%; }
+
+        /* Sin animaciones decorativas infinitas en móvil: el sway de h1/h2
+           (translateX ±20px) y el pulse de los botones (scale 1.05) expanden
+           el scroll horizontal en pantallas de 390px */
+        h1, h2 { animation: none; }
+        button { animation: none; }
       }
     </style>
   </head>
