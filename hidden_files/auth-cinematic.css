@@ -149,21 +149,24 @@ body.vp-no-scroll { overflow: hidden !important; }
   flex-direction: column;
 }
 
-/* ================= 5. BARRA SUPERIOR + WORDMARK ================= */
-.vp-auth-top {
+/* ================= 5. WORDMARK DENTRO DE LA TARJETA ================= */
+/* El overlay ya cubre todo el viewport (position:fixed, inset:0,
+   z-index:10000 por encima del header del sitio). La barra superior
+   separada se confundia con el encabezado del sitio, asi que la identidad
+   VETPLEX vive ahora dentro de la tarjeta de auth. */
+.vp-logo {
+  display: block;
   position: relative;
   z-index: 2;
-  padding: 22px 48px;
-  flex: none;
-}
-.vp-logo {
+  text-align: center;
   color: var(--vp-auth-red);      /* wordmark rojo conservado */
-  font-size: 42px;
+  font-size: 30px;
   font-weight: 900;
-  letter-spacing: 5px;
+  letter-spacing: 6px;
   line-height: 1;
   user-select: none;
   text-shadow: 0 2px 24px rgba(229, 9, 20, 0.35); /* halo propio, sutil */
+  margin: 0 0 20px;
 }
 
 /* ================= 6. TARJETA DE VIDRIO OSCURO ================= */
@@ -503,8 +506,7 @@ body.vp-no-scroll { overflow: hidden !important; }
 
 /* ================= 10. MÓVIL (iPhone 390px, premium) ================= */
 @media (max-width: 600px) {
-  .vp-auth-top { padding: 14px 18px; }
-  .vp-logo { font-size: 28px; letter-spacing: 4px; }
+  .vp-logo { font-size: 24px; letter-spacing: 4px; margin-bottom: 16px; }
   .vp-auth-bg { grid-template-columns: repeat(4, 1fr); }
   #auth-container {
     padding: calc(30px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom));
