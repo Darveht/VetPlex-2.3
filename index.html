@@ -144,6 +144,7 @@
       storageBucket: "vetplex-animes.appspot.com",
       messagingSenderId: "485618641909",
       appId: "1:485618641909:web:8030f45a4ad757a4878ebc",
+      databaseURL: "https://vetplex-animes-default-rtdb.firebaseio.com",
     };
 
     const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -868,6 +869,13 @@
       color: #9a9aa3;
       margin: 0 2px;
     }
+    .vp-empty {
+      color: #9a9aa3;
+      font-size: 14px;
+      padding: 24px 16px;
+      text-align: center;
+      flex: 0 0 100%;
+    }
 
     html, body {
       overscroll-behavior: none;
@@ -1064,335 +1072,7 @@
 
 
    
-  <!DOCTYPE html>
-  <html lang="es">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embajadores Oficiales</title>
-    <style>
-      body {
-        font-family: 'Arial', sans-serif;
-        background-color: #141414;
-        color: #eaeaea;
-        margin: 0;
-        padding: 20px;
-      }
-
-      .section-title {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-
-      .section-title h2 {
-        font-size: 24px;
-        border-bottom: 2px solid #eaeaea;
-        display: inline-block;
-        padding-bottom: 10px;
-      }
-
-      .admin-card {
-        background-color: #222;
-        margin: 10px;
-        padding: 15px;
-        border-radius: 5px;
-        text-align: center;
-        transition: transform 0.2s;
-      }
-
-      .admin-card:hover {
-        transform: scale(1.05);
-      }
-
-      .admin-card img {
-        width: 150px;
-        height: auto;
-        border-radius: 75px;
-        border: 2px solid #eaeaea;
-      }
-
-      .admin-card h3 {
-        font-size: 18px;
-        margin: 10px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .admin-card h3 img {
-        margin-left: 5px;
-        width: 15px;
-        height: 15px;
-      }
-
-      .admin-card p {
-        margin: 5px 0;
-      }
-
-      .verification-icon {
-        width: 15px;
-        height: 15px;
-        vertical-align: middle;
-        margin-left: 5px;
-      }
-
-      .circuit {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-left: 10px;
-      }
-
-      .active {
-        background-color: green;
-      }
-
-      .inactive {
-        background-color: red;
-      }
-
-      .chat-box {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 300px;
-        border: 1px solid #555;
-        background-color: #333;
-        padding: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        z-index: 1000;
-      }
-
-      .chat-log {
-        height: 150px;
-        overflow-y: auto;
-        margin-bottom: 10px;
-        border: 1px solid #555;
-        padding: 5px;
-        border-radius: 5px;
-        background-color: #444;
-      }
-
-      .typing {
-        font-style: italic;
-        color: #aaa;
-      }
-
-      .chat-input {
-        display: flex;
-      }
-
-      .chat-input input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #555;
-        border-radius: 5px;
-        margin-right: 5px;
-        background-color: #222;
-        color: #eaeaea;
-      }
-
-      .chat-input button {
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-      }
-
-      .chat-input button:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-      }
-
-      .chat-input button:active {
-        transform: scale(0.95);
-      }
-
-      .follow-button,
-      .chat-button {
-        padding: 10px 15px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-      }
-
-      .follow-button:hover,
-      .chat-button:hover {
-        transform: scale(1.05);
-      }
-
-      .follow-button:active,
-      .chat-button:active {
-        transform: scale(0.95);
-      }
-
-      .followed {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
-
-      .close-button {
-        background-color: transparent;
-        border: none;
-        color: #999;
-        cursor: pointer;
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        font-size: 16px;
-      }
-
-      .close-button:hover {
-        color: red;
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- Sección para los embajadores oficiales -->
-    <div class="section-title">
-      <h2>Administradores Oficiales</h2>
-    </div>
-
-    <div style="display: flex; overflow-x: auto;">
-      <div class="admin-card">
-        <img src="https://m.media-amazon.com/images/S/pv-target-images/80d21af2c4f9fb94460aadf6f0d73b52e91a18d1c9de0fe09e69ac8034a809e9._SX300_.jpg" alt="Administrador 1">
-        <div>
-          <h3>Darel Vega <img src="https://cdn-icons-png.freepik.com/256/16740/16740084.png?semt=ais_hybrid" alt="Verificado" class="verification-icon"></h3>
-          <p>De: HT, Estados Unidos</p>
-          <p>Rol: Fundador de Vetplex</p>
-          <p>Estado: <span class="circuit inactive"></span> Activo</p>
-          <p>Seguidores: 5.2mil</p>
-          <button class="chat-button" onclick="startChat('Darel Vega', false)">Chatear</button>
-          <button class="follow-button" onclick="followUser(this)">Seguir</button>
-        </div>
-      </div>
-<!-- Tarjeta de Efrén García -->
-<div class="admin-card">
-  <img src="https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2019/03/Inuysasha.jpg?tf=3840x" alt="Administrador Efrén García">
-  <div>
-    <h3>Efrén García 
-      <img src="https://cdn-icons-png.freepik.com/256/7642/7642170.png?semt=ais_hybrid" alt="Verificado" class="verification-icon">
-    </h3>
-    <p>De: Caracas, Venezuela</p>
-    <p>Rol: Administrador</p>
-    <p>Estado: <span class="circuit inactive"></span> Inactivo</p>
-    <p>Seguidores: 996</p>
-    <button class="chat-button" onclick="startChat('Efrén García', false)">Chatear</button>
-    <button class="follow-button" onclick="followUser(this)">Seguir</button>
-  </div>
-</div>
-
-<!-- Tarjeta de Danny (con etiqueta de menor de edad) -->
-<div class="admin-card">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtqEMHANmvgRWswKk0c6zzYnSgjdynIweeqg&usqp=CAU" alt="Administrador Danny">
-  <div>
-    <h3>Danny López 
-      <img src="https://cdn-icons-png.flaticon.com/512/3909/3909430.png" alt="Verificado" class="verification-icon">
-    </h3>
-    <p>De: Buenos Aires, Argentina</p>
-    <p>Rol: Administrador</p>
-    <p>Estado: <span class="circuit active"></span> Activo</p>
-    <p>Seguidores: 621</p>
-    <p style="color: red; font-weight: bold;">**Menor de Edad**</p> <!-- Etiqueta de menor de edad -->
-    <button class="chat-button" onclick="startChat('Danny López', true)">Chatear</button>
-    <button class="follow-button" onclick="followUser(this)">Seguir</button>
-  </div>
-</div>
-
-      <div class="admin-card">
-        <img src="https://i.pinimg.com/originals/59/b6/18/59b61873ec55e87225f84b985a361aba.jpg" alt="Administrador 2">
-        <div>
-          <h3>Oliver Duno <img src="https://cdn-icons-png.freepik.com/256/7642/7642170.png?semt=ais_hybrid" alt="Verificado" class="verification-icon"></h3>
-          <p>De: Caracas, Venezuela</p>
-          <p>Rol: Administrador</p>
-          <p>Estado: <span class="circuit inactive"></span> Inactivo</p>
-          <p>Seguidores: 1.8mil</p>
-          <button class="chat-button" onclick="startChat('Oliver Duno', false)">Chatear</button>
-          <button class="follow-button" onclick="followUser(this)">Seguir</button>
-        </div>
-      </div>
-
-      <div class="admin-card">
-        <img src="https://i.pinimg.com/736x/d1/60/b0/d160b0f16dfd48f2bca8417b5d1a3cd0.jpg" alt="Administrador 3">
-        <div>
-          <h3>Samuel Marin <img src="https://cdn-icons-png.freepik.com/256/7642/7642170.png?semt=ais_hybrid" alt="Verificado" class="verification-icon"></h3>
-          <p>De: Caracas, Venezuela</p>
-          <p>Rol: Editor de Vet Plex</p>
-          <p>Estado: <span class="circuit active"></span> Activo</p>
-          <p>Seguidores: 5.9mil</p>
-          <button class="chat-button" onclick="startChat('Samuel Marin', true)">Chatear</button>
-          <button class="follow-button" onclick="followUser(this)">Seguir</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chat Box -->
-    <div class="chat-box" id="chatBox">
-      <button class="close-button" onclick="closeChat()">✖</button>
-      <div class="chat-log" id="chatLog"></div>
-      <div class="typing" id="typingIndicator">Escribiendo...</div>
-      <div class="chat-input">
-        <input type="text" id="chatMessageInput" placeholder="Escribe un mensaje" onkeydown="handleInput(event)">
-        <button onclick="sendMessage()">Enviar</button>
-      </div>
-    </div>
-
-    <script>
-      let chatOpen = false;
-
-      function followUser(button) {
-        button.innerText = 'Siguiendo';
-        button.classList.add('followed');
-        button.disabled = true;
-      }
-
-      function startChat(adminName, isOnline) {
-        const chatBox = document.getElementById('chatBox');
-        const chatLog = document.getElementById('chatLog');
-        const typingIndicator = document.getElementById('typingIndicator');
-        chatBox.style.display = 'block';
-        chatOpen = true;
-        typingIndicator.style.display = isOnline ? 'block' : 'none';
-        chatLog.innerHTML += `<div><strong>${adminName}:</strong> Hola, ¿cómo puedo ayudarte?</div>`;
-      }
-
-      function closeChat() {
-        const chatBox = document.getElementById('chatBox');
-        chatBox.style.display = 'none';
-        chatOpen = false;
-      }
-
-      function sendMessage() {
-        const chatMessageInput = document.getElementById('chatMessageInput');
-        const message = chatMessageInput.value;
-        const chatLog = document.getElementById('chatLog');
-        if (message.trim()) {
-          chatLog.innerHTML += `<div><strong>Tú:</strong> ${message}</div>`;
-          chatMessageInput.value = '';
-        }
-      }
-
-      function handleInput(event) {
-        if (event.key === 'Enter') {
-          sendMessage();
-        }
-      }
-    </script>
-  </body>
-
-  </html>
+  
   <!DOCTYPE html>
   <html lang="es">
 
@@ -1643,6 +1323,7 @@
         messagingSenderId: "485618641909",
         appId: "1:485618641909:web:8030f45a4ad757a4878ebc",
         measurementId: "G-3QGGL7CWQ0"
+        databaseURL: "https://vetplex-animes-default-rtdb.firebaseio.com",
       };
       const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
       const database = getDatabase(app);
@@ -1731,8 +1412,16 @@
               catalogCount++;
             }
           });
-          // Mostrar la sección solo si hay animes; si no, queda oculta
-          if (catalogoWrap) catalogoWrap.hidden = catalogCount === 0;
+          // Mostrar la sección siempre; si no hay animes, mensaje visible
+          if (catalogoWrap) {
+            catalogoWrap.hidden = false;
+            if (catalogCount === 0 && catalogo) catalogo.innerHTML = '<p class="vp-empty">Aún no hay animes publicados.</p>';
+          }
+        }, (err) => {
+          if (catalogoWrap) {
+            catalogoWrap.hidden = false;
+            if (catalogo) catalogo.innerHTML = '<p class="vp-empty">No se pudo cargar el catálogo. Revisa tu conexión.</p>';
+          }
         });
       }
       // Mostrar información del anime
