@@ -1374,55 +1374,87 @@
           });
       });
       // Mostrar Animes
-      function displayAnimes() {
-        const animesRef = ref(database, 'animes');
-        onValue(animesRef, (snapshot) => {
-          animeCarousel.innerHTML = ""; // Limpiar la lista antes de volver a cargar
-          if (catalogo) catalogo.innerHTML = "";
-          let catalogCount = 0;
-          snapshot.forEach((childSnapshot) => {
-            const anime = childSnapshot.val();
-            const animeCard = document.createElement('div');
-            animeCard.className = 'anime-card';
-            animeCard.innerHTML = `
+      // Póster de respaldo (SVG inline): si un póster falla, se conserva la tarjeta con título y año
+      const POSTER_FALLBACK = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450"><rect width="300" height="450" fill="#1a1d29"/><text x="150" y="225" fill="#8b93b8" font-family="sans-serif" font-size="22" text-anchor="middle">VetPlex</text></svg>'
+      );
+      let catalogLoaded = false; // true cuando onValue o el respaldo REST ya pintaron el catálogo
+      function renderAnimeList(animes) {
+        animeCarousel.innerHTML = ""; // Limpiar la lista antes de volver a cargar
+        if (catalogo) catalogo.innerHTML = "";
+        let catalogCount = 0;
+        animes.forEach((anime) => {
+          if (!anime) return;
+          const animeCard = document.createElement('div');
+          animeCard.className = 'anime-card';
+          animeCard.innerHTML = `
             <img src="${anime.imageUrl}" alt="${anime.title}">
             <h3>${anime.title}</h3>
             <p>${anime.year}</p>
           `;
-            animeCard.addEventListener('click', () => showAnimeInfo(anime));
-            animeCarousel.appendChild(animeCard);
-            // Tarjeta del catálogo de la plataforma (misma data de Firebase)
-            if (catalogo) {
-              const card = document.createElement('article');
-              card.className = 'vp-card';
-              const img = document.createElement('img');
-              img.src = anime.imageUrl;
-              img.alt = anime.title;
-              img.loading = 'lazy';
-              img.onerror = () => card.remove(); // póster roto: fuera, sin icono roto
-              const h3 = document.createElement('h3');
-              h3.textContent = anime.title;
-              const p = document.createElement('p');
-              p.textContent = anime.year || '';
-              card.append(img, h3, p);
-              card.addEventListener('click', () => {
-                if (window.showModal) window.showModal(anime.title, anime.synopsis, anime.year);
-              });
-              catalogo.appendChild(card);
-              catalogCount++;
-            }
-          });
-          // Mostrar la sección siempre; si no hay animes, mensaje visible
-          if (catalogoWrap) {
-            catalogoWrap.hidden = false;
-            if (catalogCount === 0 && catalogo) catalogo.innerHTML = '<p class="vp-empty">Aún no hay animes publicados.</p>';
+          animeCard.addEventListener('click', () => showAnimeInfo(anime));
+          animeCarousel.appendChild(animeCard);
+          // Tarjeta del catálogo de la plataforma (misma data de Firebase)
+          if (catalogo) {
+            const card = document.createElement('article');
+            card.className = 'vp-card';
+            const img = document.createElement('img');
+            img.src = anime.imageUrl;
+            img.alt = anime.title;
+            img.loading = 'lazy';
+            img.onerror = () => { img.onerror = null; img.src = POSTER_FALLBACK; };
+            const h3 = document.createElement('h3');
+            h3.textContent = anime.title;
+            const p = document.createElement('p');
+            p.textContent = anime.year || '';
+            card.append(img, h3, p);
+            card.addEventListener('click', () => {
+              if (window.showModal) window.showModal(anime.title, anime.synopsis, anime.year);
+            });
+            catalogo.appendChild(card);
+            catalogCount++;
           }
+        });
+        // Mostrar la sección siempre; si no hay animes, mensaje visible
+        if (catalogoWrap) {
+          catalogoWrap.hidden = false;
+          if (catalogCount === 0 && catalogo) catalogo.innerHTML = '<p class="vp-empty">Aún no hay animes publicados.</p>';
+        }
+        catalogLoaded = true;
+      }
+      function displayAnimes() {
+        catalogLoaded = false;
+        const animesRef = ref(database, 'animes');
+        onValue(animesRef, (snapshot) => {
+          const animes = [];
+          snapshot.forEach((childSnapshot) => { animes.push(childSnapshot.val()); });
+          renderAnimeList(animes);
         }, (err) => {
+          // Si el respaldo REST ya pintó el catálogo, no pisarlo con el error
+          if (catalogLoaded) return;
           if (catalogoWrap) {
             catalogoWrap.hidden = false;
             if (catalogo) catalogo.innerHTML = '<p class="vp-empty">No se pudo cargar el catálogo. Revisa tu conexión.</p>';
           }
         });
+        // Respaldo: si onValue no responde en 10s (redes que bloquean el canal
+        // realtime de Firebase), cargar por REST directo y pintar el catálogo igual.
+        setTimeout(() => {
+          if (catalogLoaded) return;
+          fetch('https://vetplex-animes-default-rtdb.firebaseio.com/animes.json')
+            .then((r) => { if (!r.ok) throw new Error('REST ' + r.status); return r.json(); })
+            .then((data) => {
+              if (catalogLoaded || !data) return;
+              renderAnimeList(Object.values(data));
+            })
+            .catch(() => {
+              if (catalogLoaded) return;
+              if (catalogoWrap) {
+                catalogoWrap.hidden = false;
+                if (catalogo && !catalogo.children.length) catalogo.innerHTML = '<p class="vp-empty">No se pudo cargar el catálogo. Revisa tu conexión.</p>';
+              }
+            });
+        }, 10000);
       }
       // Mostrar información del anime
       function showAnimeInfo(anime) {
@@ -1731,305 +1763,7 @@
 
   </html>
 
-  <!DOCTYPE html>
-  <html lang="es">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrusel de Personajes de Anime</title>
-    <style>
-      /* Estilo general del carrusel */
-      .carousel-container {
-        position: relative;
-        width: 100%;
-        max-width: 800px;
-        margin: 20px auto;
-        overflow: hidden;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        background: #f9f9f9;
-      }
-
-      .carousel {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-      }
-
-      .slide {
-        min-width: 100%;
-        box-sizing: border-box;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-      }
-
-      .slide img {
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-      }
-
-      .slide h2 {
-        margin: 10px 0;
-        font-size: 1.4em;
-        color: #333;
-      }
-
-      .slide p {
-        margin: 5px 0;
-        font-size: 1.2em;
-        color: #666;
-      }
-
-      .follow-button {
-        background-color: #25d366;
-        /* Color de WhatsApp */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 1em;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .follow-button:hover {
-        background-color: #1ebc59;
-      }
-
-      .prev-button,
-      .next-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.3);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 50%;
-        font-size: 1.5em;
-        z-index: 10;
-      }
-
-      .prev-button {
-        left: 10px;
-      }
-
-      .next-button {
-        right: 10px;
-      }
-
-      /* Estilo para la animación de la burbujita */
-      .bubble {
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%) translateY(10px);
-        background-color: #25d366;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 0.9em;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.5s, transform 0.5s;
-      }
-
-      .bubble.show {
-        display: block;
-        opacity: 1;
-        transform: translateX(-50%) translateY(-50px);
-      }
-
-      /* Estilo para las recomendaciones sin interferir con la página principal */
-      .recommendations-container {
-        margin: 20px auto;
-        max-width: 800px;
-        padding: 20px;
-        background: #f0f0f0;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        position: relative;
-        font-family: Arial, sans-serif;
-        /* Evitar interferencias con la fuente de la página */
-      }
-
-      .recommendations-container h3 {
-        margin-bottom: 20px;
-        font-size: 1.5em;
-        color: #333;
-      }
-
-      .recommendations-container ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .recommendations-container li {
-        margin: 10px 0;
-        font-size: 1.2em;
-        color: #555;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-      }
-
-      .recommendations-container li .name-container {
-        display: flex;
-        align-items: center;
-      }
-
-      .recommendations-container li img.verify-icon {
-        width: 20px;
-        height: 20px;
-        margin-left: 5px;
-      }
-
-      .recommendations-container button {
-        background-color: #25d366;
-        /* Color de WhatsApp */
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 15px;
-        cursor: pointer;
-        font-size: 0.9em;
-        margin-left: 10px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .recommendations-container button:hover {
-        background-color: #1ebc59;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="carousel-container">
-      <div class="carousel">
-        <!-- Slide 1 -->
-        <div class="slide">
-          <img src="https://imgix.ranker.com/list_img_v2/8413/2728413/original/best-naruto-uzumaki-quotes?fit=crop&fm=pjpg&q=80&dpr=2&w=1200&h=720" alt="Naruto Uzumaki">
-          <h2>Naruto Uzumaki</h2>
-          <p>Seguidores: 2.5M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-        <!-- Slide 2 -->
-        <div class="slide">
-          <img src="https://image.api.playstation.com/vulcan/ap/rnd/202402/2304/60c489bc534a5909dad165af757a0af187edf44a9a1f4515.png" alt="Goku">
-          <h2>Goku</h2>
-          <p>Seguidores: 3.2M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-        <!-- Slide 3 -->
-        <div class="slide">
-          <img src="https://asset-2.tstatic.net/jogja/foto/bank/images/Monkey-D-Luffy.jpg" alt="Monkey D. Luffy">
-          <h2>Monkey D. Luffy</h2>
-          <p>Seguidores: 1.8M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-        <!-- Slide 4 -->
-        <div class="slide">
-          <img src="https://ramenparados.com/wp-content/uploads/2020/01/sailor-moon-1000x600.jpg" alt="Sailor Moon">
-          <h2>Sailor Moon</h2>
-          <p>Seguidores: 2.4M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-        <!-- Slide 5 -->
-        <div class="slide">
-          <img src="https://lucien0maverick.wordpress.com/wp-content/uploads/2015/10/spike-spiegel-2.jpg" alt="Spike Spiegel">
-          <h2>Spike Spiegel</h2>
-          <p>Seguidores: 1.4M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-        <!-- Slide 6 -->
-        <div class="slide">
-          <img src="https://i.redd.it/ylpsqwy1uoe81.jpg" alt="Edward Elric">
-          <h2>Edward Elric</h2>
-          <p>Seguidores: 1.9M</p>
-          <button class="follow-button" onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </div>
-      </div>
-      <button class="prev-button">&lt;</button>
-      <button class="next-button">&gt;</button>
-    </div>
-
-    <div class="recommendations-container">
-      <h3>Personajes Recomendados</h3>
-      <ul>
-        <li>
-          <div class="name-container">
-            Gohan (Dragon Ball)
-            <img src="https://cdn-icons-png.flaticon.com/512/7641/7641727.png" alt="Verificado" class="verify-icon">
-          </div>
-          <button onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </li>
-        <li>
-          <div class="name-container">
-            Inuyasha
-            <img src="https://cdn-icons-png.flaticon.com/512/7641/7641727.png" alt="Verificado" class="verify-icon">
-          </div>
-          <button onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </li>
-        <li>
-          <div class="name-container">
-            Kenshin Himura (Rurouni Kenshin)
-            <img src="https://cdn-icons-png.flaticon.com/512/7641/7641727.png" alt="Verificado" class="verify-icon">
-          </div>
-          <button onclick="follow(this)">Seguir</button>
-          <div class="bubble">¡Siguiendo!</div>
-        </li>
-      </ul>
-    </div>
-
-    <script>
-      // Función para cambiar el slide
-      let index = 0;
-      const slides = document.querySelectorAll('.slide');
-      const totalSlides = slides.length;
-
-      function showSlide(n) {
-        if (n >= totalSlides) index = 0;
-        else if (n < 0) index = totalSlides - 1;
-        else index = n;
-        const offset = -index * 100;
-        document.querySelector('.carousel').style.transform = `translateX(${offset}%)`;
-      }
-      document.querySelector('.prev-button').addEventListener('click', () => {
-        showSlide(index - 1);
-      });
-      document.querySelector('.next-button').addEventListener('click', () => {
-        showSlide(index + 1);
-      });
-      // Función para seguir/unfollow
-      function follow(button) {
-        const bubble = button.nextElementSibling;
-        button.textContent = button.textContent === 'Seguir' ? 'Siguiendo' : 'Seguir';
-        bubble.classList.add('show');
-        setTimeout(() => bubble.classList.remove('show'), 2000);
-      }
-    </script>
-  </body>
-
-  </html>
-
-  <!DOCTYPE html>
+    <!DOCTYPE html>
   <html lang="es">
 
   <head>
@@ -2126,26 +1860,6 @@
         font-size: 14px;
       }
 
-      .scroll-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        z-index: 100;
-      }
-
-      .scroll-button.prev {
-        left: 10px;
-      }
-
-      .scroll-button.next {
-        right: 10px;
-      }
-
       .modal {
         display: none;
         position: fixed;
@@ -2207,7 +1921,6 @@
   <body>
     <div class="section-title">Octubre 2024</div>
     <div class="carousel-container">
-      <button class="scroll-button prev">&#10094;</button>
       <div class="carousel">
         <!-- Cada ítem del carrusel -->
         <div class="carousel-item" data-info='{"title":"KamiErabi GOD.app","date":"3 de julio de 2024","rating":"65%","synopsis":"KamiErabi God.app es una serie de televisión de anime japonesa. Fue creada por Yoko Taro, producida por Unend y dirigida por Hiroyuki Seshita, la serie se emitirá en el bloque de programación +Ultra de Fuji TV en octubre a diciembre de 2023. "}'>
@@ -2247,7 +1960,6 @@
           </div>
         </div>
       </div>
-      <button class="scroll-button next">&#10095;</button>
     </div>
 
     <div class="modal" id="anime-modal">
@@ -2266,9 +1978,6 @@
     </div>
 
     <script>
-      const prevButton = document.querySelector('.scroll-button.prev');
-      const nextButton = document.querySelector('.scroll-button.next');
-      const carousel = document.querySelector('.carousel');
       const modal = document.getElementById('anime-modal');
       const modalTitle = document.querySelector('#anime-modal #modal-title');
       const modalDate = document.getElementById('modal-date');
@@ -2277,18 +1986,6 @@
       const modalClose = document.getElementById('modal-close');
       const seasonSelect = document.getElementById('season-select');
       const seasonEpisodes = document.getElementById('season-episodes');
-      prevButton.addEventListener('click', () => {
-        carousel.scrollBy({
-          left: -200,
-          behavior: 'smooth'
-        });
-      });
-      nextButton.addEventListener('click', () => {
-        carousel.scrollBy({
-          left: 200,
-          behavior: 'smooth'
-        });
-      });
       document.querySelectorAll('.carousel-item').forEach(item => {
         item.addEventListener('click', () => {
           const info = JSON.parse(item.getAttribute('data-info'));
@@ -2340,10 +2037,3 @@
   </body>
 
   </html>
-<!-- partial -->
-  <script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js'></script>
-<script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js'></script>
-<script src='https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js'></script><script  src="./script.js"></script>
-
-</body>
-</html>
